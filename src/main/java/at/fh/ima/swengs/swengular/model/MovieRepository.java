@@ -11,5 +11,4 @@ import java.util.Set;
 public interface MovieRepository extends PagingAndSortingRepository<Movie, Long>
 {
     public Set<Movie> findByTitle(@Param("title") String title);
-    //hola
 }
