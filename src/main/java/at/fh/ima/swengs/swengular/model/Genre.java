@@ -10,15 +10,16 @@ import javax.persistence.*;
 public class Genre {
 
     @Id
-    private static long id;
+    private long id;
 
     private String name;
-
 
     @Version
     private long version;
 
-    public Genre() {
+    public Genre(long id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     public long getId() {
