@@ -1,6 +1,7 @@
 package at.fh.ima.swengs.swengular.model;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -10,12 +11,16 @@ public class Movie
     private long version;
 
     @Id
-    private long id;
+    private long idMovie;
 
     private String title;
 
-    @ManyToMany(mappedBy = "id")
-    private Set<Genre> genres;
+    @ManyToMany(cascade = CascadeType.ALL)
+    //@JoinTable(name = "movie_genre", joinColumns = @JoinColumn(name = "idMovie", referencedColumnName = "idMovie"), inverseJoinColumns = @JoinColumn(name = "idGenre", referencedColumnName = "idGenre"))
+    private List<Genre> genres;
+
+    //@ManyToMany(mappedBy = "id")
+    //private Set<MovieList> movieLists;
 
     private String posterPath;
 
@@ -25,13 +30,13 @@ public class Movie
 
     private String cast;
 
-    public Movie(long id, String title,
-                 Set<Genre> genres,
+    public Movie(long idMovie, String title,
+                 List<Genre> genres,
                  String posterPath,
                  String homepage,
                  int rating,
                  String cast) {
-        this.id = id;
+        this.idMovie = idMovie;
         this.title = title;
         this.genres = genres;
         this.posterPath = posterPath;
@@ -40,17 +45,17 @@ public class Movie
         this.cast = cast;
     }
 
-    public long getId() { return id; }
+    public long getId() { return idMovie; }
 
-    public void setId(long id) { this.id = id; }
+    public void setId(long idMovie) { this.idMovie = idMovie; }
 
     public String getTitle() { return title; }
 
     public void setTitle(String title) { this.title = title; }
 
-    public Set<Genre> getGenres() { return genres; }
+    public List<Genre> getGenres() { return genres; }
 
-    public void setGenres(Set<Genre> genres) { this.genres = genres; }
+    public void setGenres(List<Genre> genres) { this.genres = genres; }
 
     public String getPosterPath() { return posterPath; }
 
@@ -67,4 +72,5 @@ public class Movie
     public String getCast() { return cast; }
 
     public void setCast(String cast) { this.cast = cast; }
+
 }

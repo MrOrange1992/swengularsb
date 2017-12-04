@@ -1,4 +1,4 @@
-package at.fh.ima.swengs.swengular.model;
+/*package at.fh.ima.swengs.swengular.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -26,7 +26,7 @@ public class User {
     @ManyToMany (mappedBy = "id")
     private Set<Genre> genres;
 
-    @OneToMany (mappedBy = "id")
+    @OneToMany (mappedBy = "id", cascade = CascadeType.ALL)
     private Set<MovieList> movieLists;
 
     public User() {
@@ -92,3 +92,4 @@ public class User {
         this.movieLists = movieLists;
     }
 }
+*/
