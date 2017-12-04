@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class User {
@@ -22,11 +23,11 @@ public class User {
     @JsonIgnore
     private String password;
 
-    @ManyToMany (mappedBy =  "id")
-    private List<Genre> genres;
+    @ManyToMany (mappedBy = "id")
+    private Set<Genre> genres;
 
     @OneToMany (mappedBy = "id")
-    private List<MovieList> movieLists;
+    private Set<MovieList> movieLists;
 
     public User() {
     }
@@ -34,8 +35,8 @@ public class User {
     public User(String firstName,
                 String lastName,
                 String password,
-                List<Genre> genres,
-                List<MovieList> movieLists) {
+                Set<Genre> genres,
+                Set<MovieList> movieLists) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
@@ -75,19 +76,19 @@ public class User {
         this.password = password;
     }
 
-    public List<Genre> getGenres() {
+    public Set<Genre> getGenres() {
         return genres;
     }
 
-    public void setGenres(List<Genre> genres) {
+    public void setGenres(Set<Genre> genres) {
         this.genres = genres;
     }
 
-    public List<MovieList> getMovieLists() {
+    public Set<MovieList> getMovieLists() {
         return movieLists;
     }
 
-    public void setMovieLists(List<MovieList> movieLists) {
+    public void setMovieLists(Set<MovieList> movieLists) {
         this.movieLists = movieLists;
     }
 }
