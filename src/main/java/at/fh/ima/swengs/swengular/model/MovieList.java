@@ -1,21 +1,8 @@
 package at.fh.ima.swengs.swengular.model;
 
-import at.fh.ima.swengs.swengular.util.JsonDateDeserializer;
-import at.fh.ima.swengs.swengular.util.JsonDateSerializer;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import sun.jvm.hotspot.memory.Generation;
-
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
-import at.fh.ima.swengs.swengular.model.User;
-import at.fh.ima.swengs.swengular.model.Movie;
 
 @Entity
 public class MovieList {
