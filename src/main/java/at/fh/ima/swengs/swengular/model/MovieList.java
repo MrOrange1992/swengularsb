@@ -11,6 +11,7 @@ import sun.jvm.hotspot.memory.Generation;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import at.fh.ima.swengs.swengular.model.User;
@@ -29,7 +30,7 @@ public class MovieList {
 
     private User user;
 
-    @ManyToMany(mappedBy = "MovieList")
+    @ManyToMany(mappedBy = "id")
     private Set<Movie> movies;
 
     public MovieList(){
@@ -38,7 +39,7 @@ public class MovieList {
     public MovieList(String name, User user){
         this.name = name;
         this.user = user;
-        this.movies = new Set<Movie>();
+        this.movies = new HashSet<Movie>();
 
     }
 
