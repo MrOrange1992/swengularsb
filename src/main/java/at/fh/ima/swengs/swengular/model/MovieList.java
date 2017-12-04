@@ -8,7 +8,7 @@ import java.util.Set;
 public class MovieList {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long listID;
+    private long id;
 
     @Version
     private long version;
@@ -30,12 +30,12 @@ public class MovieList {
 
     }
 
-    public long getListID() {
-        return listID;
+    public long getId() {
+        return id;
     }
 
-    public void setListID(long listID) {
-        this.listID = listID;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public long getVersion() {
