@@ -22,18 +22,12 @@ public class Genre {
     public Genre() {
     }
 
-    public Genre(long idGenre, String name) {
-        this.id = idGenre;
-        this.name = name;
-    }
-
-
-    public long getIdGenre() {
+    public long getId() {
         return id;
     }
 
-    public void setIdGenre(long idGenre) {
-        this.id = idGenre;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
