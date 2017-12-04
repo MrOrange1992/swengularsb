@@ -1,6 +1,7 @@
 package at.fh.ima.swengs.swengular.model;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class Movie
