@@ -22,10 +22,10 @@ public class User {
     @JsonIgnore
     private String password;
 
-    @OneToMany (mappedBy =  "User")
+    @ManyToMany (mappedBy =  "id")
     private List<Genre> genres;
 
-    @OneToMany (mappedBy = "User")
+    @OneToMany (mappedBy = "id")
     private List<MovieList> movieLists;
 
     public User() {
