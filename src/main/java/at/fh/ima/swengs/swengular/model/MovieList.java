@@ -1,4 +1,4 @@
-/*package at.fh.ima.swengs.swengular.model;
+package at.fh.ima.swengs.swengular.model;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -16,10 +16,10 @@ public class MovieList
 
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    private User users;
+    @ManyToOne()
+    private User owner;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany()
     private Set<Movie> movies;
 
     public MovieList(){
@@ -27,7 +27,7 @@ public class MovieList
     }
     public MovieList(String name, User user){
         this.name = name;
-        this.users = users;
+        this.owner = owner;
         this.movies = new HashSet<Movie>();
 
     }
@@ -56,12 +56,12 @@ public class MovieList
         this.name = name;
     }
 
-    public User getUsers() {
-        return users;
+    public User getOwner() {
+        return owner;
     }
 
-    public void setUsers(User user) {
-        this.users = user;
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 
     public Set<Movie> getMovies() {
@@ -72,4 +72,3 @@ public class MovieList
         this.movies = movies;
     }
 }
-*/

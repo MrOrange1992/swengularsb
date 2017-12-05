@@ -18,8 +18,8 @@ public class Genre {
 
     private String name;
 
-    @ManyToMany(mappedBy = "genres")
-    private List<Movie> movies;
+    @ManyToMany()
+    private Set<Movie> movies;
 
     private long version;
 
@@ -28,14 +28,14 @@ public class Genre {
     public Genre(long idGenre, String name) {
         this.idGenre = idGenre;
         this.name = name;
-        this.movies = new ArrayList<Movie>();
+        this.movies = new HashSet<Movie>();
     }
 
-    public List<Movie> getMovies() {
+    public Set<Movie> getMovies() {
         return movies;
     }
 
-    public void setMovies(List<Movie> movies) {
+    public void setMovies(Set<Movie> movies) {
         this.movies = movies;
     }
 
