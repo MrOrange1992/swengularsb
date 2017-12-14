@@ -17,7 +17,7 @@ public class Movie
 
     @ManyToMany(cascade = CascadeType.ALL)
     //@JoinTable(name = "movie_genre", joinColumns = @JoinColumn(name = "idMovie", referencedColumnName = "idMovie"), inverseJoinColumns = @JoinColumn(name = "idGenre", referencedColumnName = "idGenre"))
-    private List<Genre> genres;
+    private Set<Genre> genres;
 
     //@ManyToMany(mappedBy = "id")
     //private Set<MovieList> movieLists;
@@ -31,7 +31,7 @@ public class Movie
     private String cast;
 
     public Movie(long idMovie, String title,
-                 List<Genre> genres,
+                 Set<Genre> genres,
                  String posterPath,
                  String homepage,
                  int rating,
@@ -53,9 +53,9 @@ public class Movie
 
     public void setTitle(String title) { this.title = title; }
 
-    public List<Genre> getGenres() { return genres; }
+    public Set<Genre> getGenres() { return genres; }
 
-    public void setGenres(List<Genre> genres) { this.genres = genres; }
+    public void setGenres(Set<Genre> genres) { this.genres = genres; }
 
     public String getPosterPath() { return posterPath; }
 
