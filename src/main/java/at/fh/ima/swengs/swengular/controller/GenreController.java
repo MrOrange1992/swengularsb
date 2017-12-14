@@ -40,7 +40,7 @@ public class GenreController
                 if (genreRepository.findByName(tmDBgenre.getName()) == null)
                 {
                     at.fh.ima.swengs.swengular.model.Genre genre = new at.fh.ima.swengs.swengular.model.Genre(tmDBgenre.getId(), tmDBgenre.getName());
-                    genreRepository.persist(genre);
+                    //genreRepository.persist(genre);
                 }
             }
         }

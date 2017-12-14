@@ -14,7 +14,7 @@ public interface GenreRepository extends PagingAndSortingRepository<Genre, Long>
 
     Genre findByName(@Param("name") String name);
 
-    void persist(Genre genre);
+    //void persist(Genre genre);
 
 
 }

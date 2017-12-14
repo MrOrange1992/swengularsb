@@ -31,6 +31,8 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
+
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-rest</artifactId>
@@ -52,7 +54,7 @@
 			<scope>test</scope>
 		</dependency>
 
-        <dependency>
+        <!--dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
             <version>${version.jackson}</version>
@@ -66,7 +68,7 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${version.jackson}</version>
-        </dependency>
+        </dependency-->
 
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -87,7 +89,6 @@
             <version>1.10</version>
         </dependency>
 
-        <!--COMMON HTTP TOOLS-->
 
         <dependency>
             <groupId>org.yamj</groupId>
@@ -102,7 +103,6 @@
             <version>1.7.7</version>
         </dependency>
 
-        <!--TESTING-->
 
         <dependency>
             <groupId>junit</groupId>
@@ -118,7 +118,7 @@
         </dependency>
 	</dependencies>
 
-    <repositories>
+    <!--repositories>
         <repository>
             <id>jcenter</id>
             <name>JCenter</name>
@@ -129,7 +129,7 @@
             <name>maven</name>
             <url>http://repo.maven.apache.org/maven2</url>
         </repository>
-    </repositories>
+    </repositories-->
 
     <build>
 		<plugins>
