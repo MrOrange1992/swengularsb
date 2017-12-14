@@ -14,7 +14,7 @@ import java.util.Set;
 public class Genre {
 
     @Id
-    private long idGenre;
+    private int idGenre;
 
     private String name;
 
@@ -25,7 +25,7 @@ public class Genre {
 
 
 
-    public Genre(long idGenre, String name) {
+    public Genre(int idGenre, String name) {
         this.idGenre = idGenre;
         this.name = name;
         this.movies = new HashSet<Movie>();
