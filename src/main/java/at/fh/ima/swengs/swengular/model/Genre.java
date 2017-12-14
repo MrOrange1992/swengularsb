@@ -25,7 +25,8 @@ public class Genre {
 
 
 
-    public Genre(int idGenre, String name) {
+    public Genre(int idGenre, String name)
+    {
         this.idGenre = idGenre;
         this.name = name;
         this.movies = new HashSet<Movie>();
