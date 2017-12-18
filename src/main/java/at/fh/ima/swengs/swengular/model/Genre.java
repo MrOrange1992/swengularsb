@@ -40,6 +40,9 @@ public class Genre {
         this.movies = movies;
     }
 
+    //TODO FR: handle if movie already exists
+    public void addMovie(Movie movie) { this.movies.add(movie); }
+
     public long getId() {
         return idGenre;
     }

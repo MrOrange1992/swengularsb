@@ -26,23 +26,32 @@ public class Movie
 
     private String homepage;
 
-    private int rating;
+    private String overview;
+
+    private float rating;
+
+
 
     private String cast;
 
-    public Movie(long idMovie, String title,
-                 Set<Genre> genres,
-                 String posterPath,
-                 String homepage,
-                 int rating,
-                 String cast) {
+    public Movie(long idMovie, String title)
+    {
         this.idMovie = idMovie;
         this.title = title;
-        this.genres = genres;
-        this.posterPath = posterPath;
-        this.homepage = homepage;
-        this.rating = rating;
-        this.cast = cast;
+    }
+
+    public Movie()
+    {
+
+    }
+
+
+    public String getOverview() {
+        return overview;
+    }
+
+    public void setOverview(String overview) {
+        this.overview = overview;
     }
 
     public long getId() { return idMovie; }
@@ -57,6 +66,9 @@ public class Movie
 
     public void setGenres(Set<Genre> genres) { this.genres = genres; }
 
+    //TODO FR: handle if genre already exists
+    public void addGenre(Genre genre) { this.genres.add(genre); }
+
     public String getPosterPath() { return posterPath; }
 
     public void setPosterPath(String posterPath) { this.posterPath = posterPath; }
@@ -65,9 +77,9 @@ public class Movie
 
     public void setHomepage(String homepage) { this.homepage = homepage; }
 
-    public int getRating() { return rating; }
+    public float getRating() { return rating; }
 
-    public void setRating(int rating) { this.rating = rating; }
+    public void setRating(float rating) { this.rating = rating; }
 
     public String getCast() { return cast; }
 

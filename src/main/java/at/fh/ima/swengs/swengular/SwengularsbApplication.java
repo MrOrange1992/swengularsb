@@ -1,16 +1,14 @@
 package at.fh.ima.swengs.swengular;
 
-import at.fh.ima.swengs.swengular.repository.GenreRepository;
 import at.fh.ima.swengs.swengular.service.GetProperties;
 import info.movito.themoviedbapi.TmdbApi;
 import info.movito.themoviedbapi.TmdbMovies;
 import info.movito.themoviedbapi.model.MovieDb;
-import org.springframework.beans.factory.annotation.Autowired;
+import info.movito.themoviedbapi.model.Video;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import java.util.List;
 import java.util.Properties;
 
 @SpringBootApplication
@@ -30,7 +28,16 @@ public class SwengularsbApplication
 		//TmdbSearch tmdbSearch = new TmdbApi(apiKey).getSearch();
 
 		TmdbMovies movies = new TmdbApi(apiKey).getMovies();
-		MovieDb movie = movies.getMovie(5353, "en");
+		MovieDb movie = movies.getMovie(181808, "en");
+
+        //MovieResultsPage quatsch = movies.getPopularMovies("en", 1);
+
+        List<Video> viedos = movie.getVideos();
+
+
+
+
+		String kndsfckawn = "jnsdf";
 
 		/*
 		if (this.genreRepository.findAll().isEmpty())

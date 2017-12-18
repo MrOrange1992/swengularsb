@@ -1,10 +1,16 @@
 package at.fh.ima.swengs.swengular.dao;
 
 
+import at.fh.ima.swengs.swengular.model.Genre;
 import at.fh.ima.swengs.swengular.model.Movie;
+import at.fh.ima.swengs.swengular.repository.GenreRepository;
 import at.fh.ima.swengs.swengular.service.GetProperties;
+import info.movito.themoviedbapi.TmdbApi;
 import info.movito.themoviedbapi.TmdbMovies;
 import info.movito.themoviedbapi.model.MovieDb;
+import info.movito.themoviedbapi.model.people.Person;
+import info.movito.themoviedbapi.model.people.PersonCast;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,66 +24,50 @@ public class MovieDao
     private Properties properties = gp.getPropValues();
     private String apiKey = properties.getProperty("apiKey");
 
-    /*
-    // TODO
-    public Movie mapMovie(TmdbMovies movies, int id, boolean fullContent)
+    private TmdbMovies tmdbMovies = new TmdbApi(apiKey).getMovies();
+
+    @Autowired
+    GenreRepository genreRepository;
+
+
+    // TODO: not tested!!!
+    public Movie mapMovie(int movieID)
     {
-        Movie movieModel = new Movie();
+        Movie movie = new Movie();
 
         try
         {
-            // TmdbMovies movies = new TmdbApi(apiKey).getMovies();
-            MovieDb movie = movies.getMovie(id, "en", TmdbMovies.MovieMethod.credits);
+            MovieDb tmdbMovie = tmdbMovies.getMovie(movieID, "en", TmdbMovies.MovieMethod.credits);
 
-            if (fullContent)
+            movie.setId(tmdbMovie.getId());
+            movie.setTitle(tmdbMovie.getTitle());
+            movie.setOverview(tmdbMovie.getOverview());
+            movie.setPosterPath(tmdbMovie.getPosterPath());
+            movie.setHomepage(tmdbMovie.getHomepage());
+            movie.setRating(tmdbMovie.getUserRating());
+
+            //TODO FR: better way to do it or store cast instead of string??
+            for (PersonCast castMember : tmdbMovie.getCast())
             {
-                List<PersonCast> movieCast = movie.getCast();
-
-                if (movie.getCast().size() >= 7)
-                    movieCast = movieCast.subList(0, 6);
-
-                for (PersonCast cast : movieCast) {
-                    PersonPeople tmdbActor = tmdbPeople.getPersonInfo(cast.getId());
-
-                    Actor actor = new Actor(tmdbActor.getId(), tmdbActor.getName(), tmdbActor.getBirthday());
-                    movieModel.addActor(actor);
-                    actor.addMovie(movieModel);
-                }
-
-                movieModel.setTmdb_id(movie.getId());
-                movieModel.setOverview(movie.getOverview());
-                movieModel.setVote_count(movie.getVoteCount());
-                movieModel.setAdult(movie.isAdult());
-                movieModel.setRuntime(movie.getRuntime());
-                movieModel.setBudget(movie.getBudget());
-                movieModel.setRevenue(movie.getRevenue());
-                movieModel.setBackdropPath(movie.getBackdropPath());
-                movieModel.setOriginal_name(movie.getOriginalTitle());
-
+                movie.setCast(movie.getCast() + "," + castMember.getName());
             }
-
-            movieModel.setId(movie.getId());
-            movieModel.setTitle(movie.getTitle());
-            movieModel.setVote_average(movie.getVoteAverage());
-
-            if (movie.getReleaseDate() != "") movieModel.setRelease_date(format.parse(movie.getReleaseDate()));
-
-            movieModel.setPoster_path(movie.getPosterPath());
-            movieModel.setHomepage(movie.getHomepage());
 
             // FR: Map themoviedbapi.model.Genre to GenreModel
-            for (info.movito.themoviedbapi.model.Genre genre : movie.getGenres())
+            for (info.movito.themoviedbapi.model.Genre tmdBGenre : tmdbMovie.getGenres())
             {
-                Genre gm = new Genre(genre.getId(), genre.getName());
-                movieModel.addGenre(gm);
-                gm.addMovie(movieModel);
+                //Genre genre = new Genre(tmdBGenre.getId(), tmdBGenre.getName());
+
+                //TODO FR: genreRepository is null??
+                //all genres from TMDB already exist after application start
+                Genre genre = genreRepository.findByName(tmdBGenre.getName());
+                movie.addGenre(genre);
+                genre.addMovie(movie);
             }
 
-        } catch (Exception e) {
-            System.out.println(e);
         }
+        catch (Exception e) { System.out.println(e); }
 
-        return movieModel;
+        return movie;
     }
-    */
+
 }
