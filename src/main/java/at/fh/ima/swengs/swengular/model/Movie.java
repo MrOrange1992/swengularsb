@@ -1,6 +1,12 @@
 package at.fh.ima.swengs.swengular.model;
 
+import com.sun.tools.javah.Gen;
+import info.movito.themoviedbapi.TmdbMovies;
+import info.movito.themoviedbapi.model.MovieDb;
+import info.movito.themoviedbapi.model.people.PersonCast;
+
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -26,11 +32,10 @@ public class Movie
 
     private String homepage;
 
+    @Column(length=1024)
     private String overview;
 
     private float rating;
-
-
 
     private String cast;
 
@@ -42,6 +47,7 @@ public class Movie
 
     public Movie()
     {
+        this.genres = new HashSet<Genre>();
 
     }
 
@@ -84,5 +90,6 @@ public class Movie
     public String getCast() { return cast; }
 
     public void setCast(String cast) { this.cast = cast; }
+
 
 }

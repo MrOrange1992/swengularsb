@@ -23,7 +23,10 @@ public class Genre {
 
     private long version;
 
-
+    public Genre()
+    {
+        this.movies = new HashSet<Movie>();
+    }
 
     public Genre(int idGenre, String name)
     {
@@ -54,5 +57,7 @@ public class Genre {
     public void setName(String name) {
         this.name = name;
     }
+
+
 
 }
