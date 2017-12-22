@@ -1,10 +1,11 @@
-Task,Priority,Status
-"Communication with tmdb",H,DONE
-"Get user by ID/Name",H,
-"Save user",H,
-"Get list by name",L,
-"Add movie to list",H,
-"Save list",H,
-"Get all lists by owner",H,
-"Get TMDBmovie by id",H,
-"Get TMDBgenre by id/name",H,
+Task,Priority,Status,Notes
+"Communication with tmdb",H,DONE,
+"Get user by ID/Name",H,,
+"Save user",H,,
+"Get list by name",L,,
+"Add movie to list",H,,
+"Save list",H,,
+"Get all lists by owner",H,,
+"Get TMDBmovie by id",H,,
+"Get TMDBgenre by id/name",H,,
+"Get recommendation list by genre(s)",L,,
