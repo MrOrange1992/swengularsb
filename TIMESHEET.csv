@@ -1,0 +1,3 @@
+Person,Date,Hours,Description
+frau,18.12.2017,3h,"Work on ER models / Repositories"
+frau,21.12.2017,4h,"Created TMDB-API-Wrapper, implemented tests for Genre/Movie"
