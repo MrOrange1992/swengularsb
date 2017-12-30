@@ -1,3 +1,8 @@
 Person,Date,Hours,Description
 frau,18.12.2017,3h,"Work on ER models / Repositories"
 frau,21.12.2017,4h,"Created TMDB-API-Wrapper, implemented tests for Genre/Movie"
+frau,22.12.2017,3h,"Mod of ER-Modell -> Now using Genre/Movie models directly from TMDB, implemented multiple test cases"
+frau,23.12.2017,0.5h,"Implemented follow user"
+frau,30.12.2017,1h,"Work on test cases"
+
+
