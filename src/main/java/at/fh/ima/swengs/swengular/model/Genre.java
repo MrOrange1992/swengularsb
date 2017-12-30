@@ -9,7 +9,11 @@ import java.util.Set;
 /**
  * Created by jashanica on 4/12/17.
  */
+//DEPRECATED
+//Will use TMDBGenre instead
 
+
+    /*
 @Entity
 public class Genre {
 
@@ -61,3 +65,4 @@ public class Genre {
 
 
 }
+*/
