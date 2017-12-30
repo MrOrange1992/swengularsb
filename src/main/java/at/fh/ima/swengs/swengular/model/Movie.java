@@ -10,6 +10,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+//DEPRECATED
+//Will use TMDBmovie instead (MovieDb)
+
+
+/*
 @Entity
 public class Movie
 {
@@ -93,3 +98,4 @@ public class Movie
 
 
 }
+*/
