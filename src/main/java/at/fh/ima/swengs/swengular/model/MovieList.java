@@ -7,34 +7,31 @@ import java.util.Set;
 @Entity
 public class MovieList
 {
+    @Version
+    private long version;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-
-    @Version
-    private long version;
 
     private String name;
 
     @ManyToOne()
     private User owner;
 
-    @ManyToMany()
-    private Set<Movie> movies;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<Integer> movieIDs;
 
-    public MovieList(){
+    public MovieList(){ }
 
-    }
-    public MovieList(String name, User user){
+    public MovieList(String name, User owner)
+    {
         this.name = name;
         this.owner = owner;
-        this.movies = new HashSet<Movie>();
-
+        this.movieIDs = new HashSet<Integer>();
     }
 
-    public long getId() {
-        return id;
-    }
+    public long getId() { return id; }
 
     public void setId(long id) {
         this.id = id;
@@ -64,11 +61,19 @@ public class MovieList
         this.owner = owner;
     }
 
-    public Set<Movie> getMovies() {
-        return movies;
+    public Set<Integer> getMovieIDs() {
+        return movieIDs;
     }
 
-    public void setMovies(Set<Movie> movies) {
-        this.movies = movies;
+    public void setMovieIDs(Set<Integer> movieIDs) {
+        this.movieIDs = movieIDs;
+    }
+
+    public void addMovieID(int movieID) { this.movieIDs.add(movieID); }
+
+    public void removeMovieID(int movieID)
+    {
+        this.movieIDs.remove(movieID);
+        //System.out.println("DEBUG");
     }
 }
