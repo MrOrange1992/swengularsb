@@ -3,11 +3,13 @@ package at.fh.ima.swengs.swengular.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
-public class User {
-
+public class User
+{
     @Version
     private long version;
 
@@ -22,25 +24,26 @@ public class User {
     @JsonIgnore
     private String password;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    private Set<Genre> genres;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<Integer> genreIDs;
 
-    @OneToMany (mappedBy = "owner")
+    @OneToMany (mappedBy = "owner", fetch = FetchType.EAGER)
     private Set<MovieList> movieLists;
 
-    public User() {
-    }
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<User> usersFollowing;
 
-    public User(String firstName,
-                String lastName,
-                String password,
-                Set<Genre> genres,
-                Set<MovieList> movieLists) {
+
+    public User() { }
+
+    public User(String firstName, String lastName, String password)
+    {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
-        this.genres = genres;
-        this.movieLists = movieLists;
+        this.genreIDs = new HashSet<Integer>();
+        this.movieLists = new HashSet<MovieList>();
+        this.usersFollowing = new HashSet<User>();
     }
 
     public long getId() {
@@ -75,12 +78,20 @@ public class User {
         this.password = password;
     }
 
-    public Set<Genre> getGenres() {
-        return genres;
+    public Set<Integer> getGenreIDs() {
+        return genreIDs;
     }
 
-    public void setGenres(Set<Genre> genres) {
-        this.genres = genres;
+    public void setGenreIDs(Set<Integer> genreIDs) {
+        this.genreIDs = genreIDs;
+    }
+
+    public void addGenreID(int genreID) {
+        this.genreIDs.add(genreID);
+    }
+
+    public void removeGenreID(int genreID) {
+        this.genreIDs.remove(genreID);
     }
 
     public Set<MovieList> getMovieLists() {
@@ -90,4 +101,16 @@ public class User {
     public void setMovieLists(Set<MovieList> movieLists) {
         this.movieLists = movieLists;
     }
+
+    public Set<User> getUsersFollowing() { return usersFollowing; }
+
+    public User getUserFollowingByID(int userID)
+    {
+        return this.usersFollowing.stream().filter(user -> user.getId() != userID).collect(Collectors.toList()).get(0);
+    }
+
+    public void setUsersFollowing(Set<User> usersFollowing) { this.usersFollowing = usersFollowing; }
+
+    public void addUserFollowing(User user) { this.usersFollowing.add(user); }
+
 }
