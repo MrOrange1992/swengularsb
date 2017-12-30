@@ -1,21 +1,26 @@
 package at.fh.ima.swengs.swengular.service;
 
-import at.fh.ima.swengs.swengular.model.Genre;
-import at.fh.ima.swengs.swengular.model.Movie;
+//DEPRECATED
+//import at.fh.ima.swengs.swengular.model.Genre;
+//import at.fh.ima.swengs.swengular.model.Movie;
 import at.fh.ima.swengs.swengular.model.MovieList;
-import at.fh.ima.swengs.swengular.repository.GenreRepository;
+//import at.fh.ima.swengs.swengular.repository.GenreRepository;
+import at.fh.ima.swengs.swengular.model.User;
 import info.movito.themoviedbapi.TmdbApi;
 import info.movito.themoviedbapi.TmdbGenre;
 import info.movito.themoviedbapi.TmdbMovies;
 import info.movito.themoviedbapi.model.MovieDb;
+import info.movito.themoviedbapi.model.Genre;
+import info.movito.themoviedbapi.model.core.MovieResultsPage;
 import info.movito.themoviedbapi.model.people.PersonCast;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.*;
+import java.util.*;
 import java.util.List;
-import java.util.Properties;
-import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,10 +34,15 @@ public class TmdbAPI
     private TmdbApi tmdbApi =  new TmdbApi(apiKey);
     private TmdbMovies tmdbMovies = tmdbApi.getMovies();
 
-    @Autowired
-    GenreRepository genreRepository;
+    private Map<Integer, Genre> genreIDMap = tmdbApi.getGenre().getGenreList("en").stream()
+            .collect(Collectors.toMap(Genre::getId, Function.identity()));
 
+    private Map<String, Genre> genreNameMap = tmdbApi.getGenre().getGenreList("en").stream()
+            .collect(Collectors.toMap(Genre::getName, Function.identity()));
 
+    //DEPRECATED
+    //@Autowired
+    //GenreRepository genreRepository;
     //------------------------------------------------------------------------------------------------------------------
 
 
@@ -53,12 +63,13 @@ public class TmdbAPI
 
     //METHODS
     //------------------------------------------------------------------------------------------------------------------
-    /***
+    /*** DEPRECATED
      *
      * cause genre wants movie object from db that isnt yet there
      * @param tmdbMovie
      * @return
      */
+    /*
     @Transactional
     public Movie mapMovie(MovieDb tmdbMovie)
     {
@@ -88,14 +99,16 @@ public class TmdbAPI
             //can be null
             if (tmdbMovie.getGenres() != null)
             {
-                for (info.movito.themoviedbapi.model.Genre tmdBGenre : tmdbMovie.getGenres())
+                for (Genre tmdBGenre : tmdbMovie.getGenres())
                 {
+
                     //all genres from TMDB already exist after application start
                     Genre genre = genreRepository.findByName(tmdBGenre.getName());
                     movie.addGenre(genre);
                     genre.addMovie(movie);
                     //TODO FR: persistence.EntityNotFoundException: cause genre wants movie object from db that isnt yet there
                     genreRepository.save(genre);
+
                 }
             }
         //}
@@ -104,9 +117,25 @@ public class TmdbAPI
         return movie;
     }
 
+    /**
+     * Map all "en" Genres from TMDB to our Genre model
+     * This function should be called once @ setup of application
+     *
+     * @return  Collection of all available Genres
+     *
+    public Set<Genre> mapAllTmdbGenres()
+    {
+        TmdbGenre tmdbGenre = tmdbApi.getGenre();
 
+        List<Genre> tmdbGenres = tmdbGenre.getGenreList("en");
 
-    /***
+        //using lambda expression for mapping all genres
+        //return tmdbGenres.stream().map(genre -> new Genre(genre.getId(), genre.getName())).collect(Collectors.toSet());
+        return null;
+    }
+    */
+
+    /*** DEPRECATED
      * TODO FR: map function for collection of movies returned as MovieList
      * @return
      */
@@ -116,22 +145,105 @@ public class TmdbAPI
     }
 
 
-
-    /***
-     * Map all "en" Genres from TMDB to our Genre model
-     * This function should be called once @ setup of application
-     *
-     * @return  Collection of all available Genres
+    /**
+     * Get TMDBmovie by ID
+     * @param movieID id of TMDBmovie
+     * @return  TMDBmovie
      */
-    public Set<Genre> mapAllTmdbGenres()
+    public MovieDb getMovieByID(int movieID)
     {
-        TmdbGenre tmdbGenre = tmdbApi.getGenre();
+        return tmdbMovies.getMovie(movieID, "en");
 
-        List<info.movito.themoviedbapi.model.Genre> tmdbGenres = tmdbGenre.getGenreList("en");
+        /*TODO: ResourceNotFound
+            handle ResourceNotFound returned by TMDB if MovieDb ID has been updated in TMDB
+            maybe use update - function (updateTMDBChanges()) from testcases
+            or build custom Exception to Invoke UpdateFunction internally on error
+        */
 
-        //using lambda expression for mapping all genres
-        return tmdbGenres.stream().map(genre -> new Genre(genre.getId(), genre.getName())).collect(Collectors.toSet());
+        /* 26.12.2017 -> resource not found exception returned by TMDB for about 10min
+        try
+        {
+            return tmdbMovies.getMovie(movieID, "en");
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
+        */
     }
+
+    /**
+     * Get set of TMDB movies of specified MovieList
+     * @param movieList List to get TMDBmovies from
+     * @return Set of TMDBmovies
+     */
+    public Set<MovieDb> getMoviesOfList(MovieList movieList)
+    {
+        return movieList.getMovieIDs().stream().map(movieID -> getMovieByID(movieID)).collect(Collectors.toSet());
+    }
+
+    /**
+     * Get TMDBGenre by ID
+     * @param genreID ID of TMDBgenre
+     * @return TMDBgenre
+     */
+    public Genre getGenreByID(int genreID) { return genreIDMap.get(genreID); }
+
+    /**
+     * Get TMDBGenre by name
+     * @param genreName name of TMDBgenre
+     * @return TMDBgenre
+     */
+    public Genre getGenreByName(String genreName) { return genreNameMap.get(genreName); }
+
+    /**
+     * Get all TMDBgenres (en)
+     * @return Set of TMDBgenres
+     */
+    public Set<Genre> getAllGenres()
+    {
+        return new HashSet<Genre>(genreIDMap.values());
+    }
+
+    /**
+     * Get collection of popular TMDBmovies
+     * @param resultPages number of resultpages to return
+     * @return set of TMDBmovies
+     */
+    public Set<MovieDb> getPopularMovies(int resultPages)
+    {
+        return new HashSet<MovieDb>(tmdbMovies.getPopularMovies("en", resultPages).getResults());
+    }
+
+    /**
+     * Get collection of similar TMDBmovies
+     * @param movieID movie to get similar results from
+     * @param resultPages number of resultpages to return
+     * @return  set of TMDBmovies
+     */
+    public Set<MovieDb> getSimilarMovies(int movieID, int resultPages)
+    {
+        return new HashSet<MovieDb>(tmdbMovies.getSimilarMovies(movieID, "en", resultPages).getResults());
+    }
+
+
+
+    //TODO: Maybe get movie collection over TmdbColection class for Frontend
+    public Set<TmdbCollection> getTmdbCollectionOfAllUserLists(Set<User> users)
+    {
+        Set<TmdbCollection> tmdbLists = new HashSet<>();
+
+        for (User user : users)
+        {
+            for (MovieList movieList : user.getMovieLists())
+            {
+                tmdbLists.add(new TmdbCollection(movieList.getName(), user, getMoviesOfList(movieList)));
+            }
+        }
+
+        return tmdbLists;
+    }
+
     //------------------------------------------------------------------------------------------------------------------
 
 
