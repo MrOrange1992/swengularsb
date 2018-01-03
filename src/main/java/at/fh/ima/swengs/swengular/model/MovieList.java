@@ -1,5 +1,10 @@
 package at.fh.ima.swengs.swengular.model;
 
+import at.fh.ima.swengs.swengular.service.TmdbAPI;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import info.movito.themoviedbapi.model.MovieDb;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,6 +27,13 @@ public class MovieList
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Integer> movieIDs;
 
+    @JsonInclude()
+    @Transient
+    private Set<MovieDb> movies;
+
+    @Transient
+    private TmdbAPI tmdbAPI = new TmdbAPI();
+
     public MovieList(){ }
 
     public MovieList(String name, User owner)
@@ -29,8 +41,10 @@ public class MovieList
         this.name = name;
         this.owner = owner;
         this.movieIDs = new HashSet<Integer>();
+        //this.movies = tmdbAPI.getMoviesOfIDs(this.movieIDs);
     }
 
+    /* probably wont need these
     public long getId() { return id; }
 
     public void setId(long id) {
@@ -45,6 +59,7 @@ public class MovieList
         this.version = version;
     }
 
+    */
     public String getName() {
         return name;
     }
@@ -69,11 +84,34 @@ public class MovieList
         this.movieIDs = movieIDs;
     }
 
-    public void addMovieID(int movieID) { this.movieIDs.add(movieID); }
+    public void addMovieID(int movieID)
+    {
+        this.movieIDs.add(movieID);
+        //this.movies.add(tmdbAPI.getMovieByID(movieID));
+    }
 
+
+    //TODO remove also content from movies??
     public void removeMovieID(int movieID)
     {
         this.movieIDs.remove(movieID);
+        //this.movies.remove(tmdbAPI.getMovieByID(movieID));
         //System.out.println("DEBUG");
+    }
+
+    public Set<MovieDb> getMovies() { return movies; }
+
+    public void setMovies(Set<MovieDb> movies) { this.movies = movies; }
+
+    /**
+     * Fill list instance with tmdb movies from list of IDs
+     * @return updated Instance
+     */
+    public MovieList loadTmdbContent()
+    {
+        this.movies = tmdbAPI.getMoviesOfIDs(this.movieIDs);
+
+        //TODO best practice to return updated instance??
+        return this;
     }
 }
