@@ -7,16 +7,12 @@ import at.fh.ima.swengs.swengular.repository.MovieListRepository;
 import at.fh.ima.swengs.swengular.repository.UserRepository;
 import at.fh.ima.swengs.swengular.service.TmdbAPI;
 import info.movito.themoviedbapi.model.Genre;
-import info.movito.themoviedbapi.model.MovieDb;
-import org.hibernate.Hibernate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.jws.soap.SOAPBinding;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -69,16 +65,6 @@ public class SwengularsbApplicationTests
 
     //PASS
     @Test
-    public void getTMDBMoviesFromMovieList()
-    {
-        MovieList list1 = movieListRepository.findByName("bestOf");
-
-
-        list1.getMovieIDs().stream().map(movieId -> tmdbAPI.getMovieByID(movieId)).collect(Collectors.toSet()).forEach(movieDb -> System.out.println(movieDb.getTitle()));
-    }
-
-    //PASS
-    @Test
     public void addMoviesToList()
     {
         User flexBoy = userRepository.findByFirstName("Flex");
@@ -90,6 +76,17 @@ public class SwengularsbApplicationTests
         //list1.addMovieID(tmdbAPI.getTmdbMovies().getLatestMovie().getId());
 
         movieListRepository.save(popularMovieList);
+    }
+
+    //PASS
+    @Test
+    public void getTMDBMoviesFromMovieList()
+    {
+        MovieList list1 = movieListRepository.findByName("bestOf");
+
+        //OLD with TMDBAPI not implemented in Movielist model
+        //list1.getMovieIDs().stream().map(movieId -> tmdbAPI.getMovieByID(movieId)).collect(Collectors.toSet()).forEach(movieDb -> System.out.println(movieDb.getTitle()));
+        list1.loadTmdbContent().getMovies().forEach(movieDb -> System.out.println(movieDb.getTitle()));
     }
 
     //PASS
@@ -139,18 +136,25 @@ public class SwengularsbApplicationTests
     @Test
     public void getPopularMovies()
     {
-        Set<MovieDb> resultList = tmdbAPI.getPopularMovies(1);
+        MovieList resultList = new MovieList();
+        resultList.setName("Popular Movies");
 
-        resultList.forEach(movie -> System.out.println(movie.getTitle()));
+        resultList.setMovies(tmdbAPI.getPopularMovies(1));
+
+        resultList.getMovies().forEach(movie -> System.out.println(movie.getTitle()));
     }
 
     //PASS
     @Test
     public void getSimilarMovies()
     {
-        Set<MovieDb> resultList = tmdbAPI.getSimilarMovies(354912, 1);
+        MovieList resultList = new MovieList();
+        resultList.setName("Similar Movies");
 
-        resultList.forEach(movie -> System.out.println(movie.getTitle()));
+
+        resultList.setMovies(tmdbAPI.getSimilarMovies(354912, 1));
+
+        resultList.getMovies().forEach(movie -> System.out.println(movie.getTitle()));
     }
 
     //PASS
@@ -177,7 +181,14 @@ public class SwengularsbApplicationTests
     {
         User luckyLuke = userRepository.findByFirstName("Lucky");
 
-        tmdbAPI.getTmdbCollectionOfAllUserLists(luckyLuke.getUsersFollowing());
+        Set<MovieList> resultLists = new HashSet<>();
+
+        for (User user : luckyLuke.getUsersFollowing())
+        {
+            resultLists.addAll(user.getMovieLists());
+        }
+
+        resultLists.forEach(movieList -> System.out.println(movieList.getName()));
     }
 
     //PASS
