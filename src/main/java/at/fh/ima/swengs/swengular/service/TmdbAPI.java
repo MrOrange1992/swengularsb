@@ -4,22 +4,15 @@ package at.fh.ima.swengs.swengular.service;
 //import at.fh.ima.swengs.swengular.model.Genre;
 //import at.fh.ima.swengs.swengular.model.Movie;
 import at.fh.ima.swengs.swengular.model.MovieList;
-//import at.fh.ima.swengs.swengular.repository.GenreRepository;
 import at.fh.ima.swengs.swengular.model.User;
 import info.movito.themoviedbapi.TmdbApi;
-import info.movito.themoviedbapi.TmdbGenre;
 import info.movito.themoviedbapi.TmdbMovies;
 import info.movito.themoviedbapi.model.MovieDb;
 import info.movito.themoviedbapi.model.Genre;
-import info.movito.themoviedbapi.model.core.MovieResultsPage;
-import info.movito.themoviedbapi.model.people.PersonCast;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.*;
+import org.springframework.stereotype.Service;
+
 import java.util.*;
-import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -172,14 +165,25 @@ public class TmdbAPI
         */
     }
 
-    /**
+    /** DEPRECATED -> handled by MovieList.loadTmdbContent()
      * Get set of TMDB movies of specified MovieList
      * @param movieList List to get TMDBmovies from
      * @return Set of TMDBmovies
-     */
+
     public Set<MovieDb> getMoviesOfList(MovieList movieList)
     {
         return movieList.getMovieIDs().stream().map(movieID -> getMovieByID(movieID)).collect(Collectors.toSet());
+    }
+    */
+
+    /**
+     * Get set of TMDB movies of multiple IDs
+     * @param IDs set of IDs to get Tmdb content from
+     * @return Set of TMDBmovies
+     */
+    public Set<MovieDb> getMoviesOfIDs(Set<Integer> IDs)
+    {
+        return IDs.stream().map(movieID -> getMovieByID(movieID)).collect(Collectors.toSet());
     }
 
     /**
@@ -225,25 +229,6 @@ public class TmdbAPI
     {
         return new HashSet<MovieDb>(tmdbMovies.getSimilarMovies(movieID, "en", resultPages).getResults());
     }
-
-
-
-    //TODO: Maybe get movie collection over TmdbColection class for Frontend
-    public Set<TmdbCollection> getTmdbCollectionOfAllUserLists(Set<User> users)
-    {
-        Set<TmdbCollection> tmdbLists = new HashSet<>();
-
-        for (User user : users)
-        {
-            for (MovieList movieList : user.getMovieLists())
-            {
-                tmdbLists.add(new TmdbCollection(movieList.getName(), user, getMoviesOfList(movieList)));
-            }
-        }
-
-        return tmdbLists;
-    }
-
     //------------------------------------------------------------------------------------------------------------------
 
 
