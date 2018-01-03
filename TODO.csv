@@ -1,17 +1,17 @@
 Task/Test cases,Priority,Status,Notes
 "Communication with tmdb",H,DONE,
-"Get user by ID/Name",H,DONE,
-"Save user",H,DONE,
-"Users - make secure password hash",H,,
-"Follow another user",L,DONE,
-"Get list by name",L,,
-"Add movie to list",H,DONE,
-"Save list",H,DONE,
-"Get all lists by owner",H,DONE,
-"Get TMDBmovie by id",H,DONE,
-"Get TMDBgenre by id/name",H,DONE,
+"Get user by ID/Name",H,,"Test DONE"
+"Save user",H,,"Test DONE"
+"Users - make secure password hash",H,,"If necessary"
+"Follow another user",L,,"Test DONE"
+"Get list by name",L,,"Test DONE"
+"Add movie ID to list",H,,"Test DONE"
+"Save list",H,,"Test DONE"
+"Get all lists by owner",H,,"Test DONE"
+"Get TMDBmovie by id",H,,"Test DONE"
+"Get TMDBgenre by id/name",H,,"Test DONE"
 "Get recommendation list by genre(s)",L,IP,"find best way to submit tmdbmovie collection"
-"Get popular movies",L,DONE,
-"Get similar movies",L,DONE,
+"Get popular movies",L,,"Test DONE"
+"Get similar movies",L,,"Test DONE"
 "Find users by genre",L,,
-"Find lists containing movie",L,,
+"Find lists containing movie",L,,"Test DONE"
