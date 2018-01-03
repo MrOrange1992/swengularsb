@@ -44,22 +44,21 @@ public class MovieList
         //this.movies = tmdbAPI.getMoviesOfIDs(this.movieIDs);
     }
 
-    /* probably wont need these
+
     public long getId() { return id; }
 
-    public void setId(long id) {
+    /*public void setId(long id) {
         this.id = id;
-    }
+    }*/
 
     public long getVersion() {
         return version;
     }
 
-    public void setVersion(long version) {
+    /*public void setVersion(long version) {
         this.version = version;
-    }
+    }*/
 
-    */
     public String getName() {
         return name;
     }
