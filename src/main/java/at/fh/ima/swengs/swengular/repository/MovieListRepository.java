@@ -1,6 +1,5 @@
 package at.fh.ima.swengs.swengular.repository;
 
-//import at.fh.ima.swengs.swengular.model.Movie;
 import at.fh.ima.swengs.swengular.model.MovieList;
 import at.fh.ima.swengs.swengular.model.User;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -15,6 +14,8 @@ public interface MovieListRepository extends PagingAndSortingRepository<MovieLis
     public Set<MovieList> findAllByOwner(@Param("owner") User owner);
 
     public MovieList findByName(@Param("name") String name);
+
+    public MovieList findById(@Param("id") long id);
 
     public Set<MovieList> findAllByMovieIDsContaining(@Param("movieID") int movieID);
 
