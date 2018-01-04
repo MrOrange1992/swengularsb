@@ -7,6 +7,8 @@ import at.fh.ima.swengs.swengular.repository.MovieListRepository;
 import at.fh.ima.swengs.swengular.repository.UserRepository;
 import at.fh.ima.swengs.swengular.service.TmdbAPI;
 import info.movito.themoviedbapi.model.Genre;
+import jdk.nashorn.internal.parser.JSONParser;
+import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -221,6 +223,12 @@ public class SwengularsbApplicationTests
                 }
             }
         }
+    }
+
+    @Test
+    public void getMovieListByName(){
+        MovieList testlist = movieListRepository.findByName("bestOf");
+        System.out.println(testlist.getName());
     }
 
 

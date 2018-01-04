@@ -1,8 +1,12 @@
 package at.fh.ima.swengs.swengular.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.tools.javah.Gen;
 import info.movito.themoviedbapi.TmdbMovies;
-import info.movito.themoviedbapi.model.MovieDb;
+import info.movito.themoviedbapi.model.*;
+import info.movito.themoviedbapi.model.MovieList;
+import info.movito.themoviedbapi.model.core.MovieKeywords;
+import info.movito.themoviedbapi.model.core.ResultsPage;
 import info.movito.themoviedbapi.model.people.PersonCast;
 
 import javax.persistence.*;
@@ -14,49 +18,100 @@ import java.util.Set;
 //Will use TMDBmovie instead (MovieDb)
 
 
-/*
-@Entity
-public class Movie
-{
-    @Version
-    private long version;
 
-    @Id
-    private long idMovie;
+
+public class Movie extends MovieDb
+{
+
+    private int id;
 
     private String title;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    //@JoinTable(name = "movie_genre", joinColumns = @JoinColumn(name = "idMovie", referencedColumnName = "idMovie"), inverseJoinColumns = @JoinColumn(name = "idGenre", referencedColumnName = "idGenre"))
-    private Set<Genre> genres;
-
-    //@ManyToMany(mappedBy = "id")
-    //private Set<MovieList> movieLists;
-
     private String posterPath;
+
+    private List<Genre> genres;
 
     private String homepage;
 
-    @Column(length=1024)
     private String overview;
 
-    private float rating;
+    private float userRating;
 
-    private String cast;
+    //TODO: Cast
 
-    public Movie(long idMovie, String title)
-    {
-        this.idMovie = idMovie;
+
+    public Movie(){
+
+    }
+
+    public Movie(MovieDb mov) {
+        this.id = mov.getId();
+        this.title = mov.getTitle();
+        this.posterPath = mov.getPosterPath();
+        this.genres = mov.getGenres();
+        this.homepage = mov.getHomepage();
+        this.overview = mov.getOverview();
+        this.userRating = mov.getUserRating();
+    }
+
+
+    public Movie(int id, String title, String posterPath, List<Genre> genres, String homepage, String overview, float userRating) {
+        this.id = id;
+        this.title = title;
+        this.posterPath = posterPath;
+        this.genres = genres;
+        this.homepage = homepage;
+        this.overview = overview;
+        this.userRating = userRating;
+    }
+
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Override
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
         this.title = title;
     }
 
-    public Movie()
-    {
-        this.genres = new HashSet<Genre>();
-
+    @Override
+    public String getPosterPath() {
+        return posterPath;
     }
 
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
+    }
 
+    @Override
+    public List<Genre> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(List<Genre> genres) {
+        this.genres = genres;
+    }
+
+    @Override
+    public String getHomepage() {
+        return homepage;
+    }
+
+    public void setHomepage(String homepage) {
+        this.homepage = homepage;
+    }
+
+    @Override
     public String getOverview() {
         return overview;
     }
@@ -65,37 +120,55 @@ public class Movie
         this.overview = overview;
     }
 
-    public long getId() { return idMovie; }
+    @Override
+    public float getUserRating() {
+        return userRating;
+    }
 
-    public void setId(long idMovie) { this.idMovie = idMovie; }
+    public void setUserRating(float userRating) {
+        this.userRating = userRating;
+    }
 
-    public String getTitle() { return title; }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
-    public void setTitle(String title) { this.title = title; }
+        Movie movie = (Movie) o;
 
-    public Set<Genre> getGenres() { return genres; }
+        if (id != movie.id) return false;
+        if (Float.compare(movie.userRating, userRating) != 0) return false;
+        if (title != null ? !title.equals(movie.title) : movie.title != null) return false;
+        if (posterPath != null ? !posterPath.equals(movie.posterPath) : movie.posterPath != null) return false;
+        if (genres != null ? !genres.equals(movie.genres) : movie.genres != null) return false;
+        if (homepage != null ? !homepage.equals(movie.homepage) : movie.homepage != null) return false;
+        return overview != null ? overview.equals(movie.overview) : movie.overview == null;
+    }
 
-    public void setGenres(Set<Genre> genres) { this.genres = genres; }
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + id;
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (posterPath != null ? posterPath.hashCode() : 0);
+        result = 31 * result + (genres != null ? genres.hashCode() : 0);
+        result = 31 * result + (homepage != null ? homepage.hashCode() : 0);
+        result = 31 * result + (overview != null ? overview.hashCode() : 0);
+        result = 31 * result + (userRating != +0.0f ? Float.floatToIntBits(userRating) : 0);
+        return result;
+    }
 
-    //TODO FR: handle if genre already exists
-    public void addGenre(Genre genre) { this.genres.add(genre); }
-
-    public String getPosterPath() { return posterPath; }
-
-    public void setPosterPath(String posterPath) { this.posterPath = posterPath; }
-
-    public String getHomepage() { return homepage; }
-
-    public void setHomepage(String homepage) { this.homepage = homepage; }
-
-    public float getRating() { return rating; }
-
-    public void setRating(float rating) { this.rating = rating; }
-
-    public String getCast() { return cast; }
-
-    public void setCast(String cast) { this.cast = cast; }
-
-
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", posterPath='" + posterPath + '\'' +
+                ", genres=" + genres +
+                ", homepage='" + homepage + '\'' +
+                ", overview='" + overview + '\'' +
+                ", userRating=" + userRating +
+                '}';
+    }
 }
-*/

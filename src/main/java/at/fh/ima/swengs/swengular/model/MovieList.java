@@ -1,7 +1,7 @@
 package at.fh.ima.swengs.swengular.model;
 
 import at.fh.ima.swengs.swengular.service.TmdbAPI;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.*;
 import info.movito.themoviedbapi.model.MovieDb;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -13,6 +13,7 @@ import java.util.Set;
 public class MovieList
 {
     @Version
+    @JsonIgnore
     private long version;
 
     @Id
@@ -22,16 +23,18 @@ public class MovieList
     private String name;
 
     @ManyToOne()
+    @JsonBackReference
     private User owner;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Integer> movieIDs;
 
-    @JsonInclude()
-    @Transient
-    private Set<MovieDb> movies;
 
     @Transient
+    private Set<Movie> movies;
+
+    @Transient
+    @JsonIgnore
     private TmdbAPI tmdbAPI = new TmdbAPI();
 
     public MovieList(){ }
@@ -98,9 +101,9 @@ public class MovieList
         //System.out.println("DEBUG");
     }
 
-    public Set<MovieDb> getMovies() { return movies; }
+    public Set<Movie> getMovies() { return movies; }
 
-    public void setMovies(Set<MovieDb> movies) { this.movies = movies; }
+    public void setMovies(Set<Movie> movies) { this.movies = movies; }
 
     /**
      * Fill list instance with tmdb movies from list of IDs

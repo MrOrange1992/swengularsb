@@ -1,6 +1,7 @@
 package at.fh.ima.swengs.swengular.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -28,6 +29,7 @@ public class User
     private Set<Integer> genreIDs;
 
     @OneToMany (mappedBy = "owner", fetch = FetchType.EAGER)
+    @JsonManagedReference
     private Set<MovieList> movieLists;
 
     @ElementCollection(fetch = FetchType.EAGER)

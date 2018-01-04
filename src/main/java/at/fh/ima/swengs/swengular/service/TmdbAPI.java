@@ -3,6 +3,7 @@ package at.fh.ima.swengs.swengular.service;
 //DEPRECATED
 //import at.fh.ima.swengs.swengular.model.Genre;
 //import at.fh.ima.swengs.swengular.model.Movie;
+import at.fh.ima.swengs.swengular.model.Movie;
 import at.fh.ima.swengs.swengular.model.MovieList;
 import at.fh.ima.swengs.swengular.model.User;
 import info.movito.themoviedbapi.TmdbApi;
@@ -64,7 +65,7 @@ public class TmdbAPI
      */
     /*
     @Transactional
-    public Movie mapMovie(MovieDb tmdbMovie)
+    public Movie mapMovie(Movie tmdbMovie)
     {
         Movie movie = new Movie();
 
@@ -143,9 +144,10 @@ public class TmdbAPI
      * @param movieID id of TMDBmovie
      * @return  TMDBmovie
      */
-    public MovieDb getMovieByID(int movieID)
+    public Movie getMovieByID(int movieID)
     {
-        return tmdbMovies.getMovie(movieID, "en");
+        //System.out.println(new Movie(tmdbMovies.getMovie(movieID, "en")).toString());
+        return new Movie(tmdbMovies.getMovie(movieID, "en"));
 
         /*TODO: ResourceNotFound
             handle ResourceNotFound returned by TMDB if MovieDb ID has been updated in TMDB
@@ -181,7 +183,7 @@ public class TmdbAPI
      * @param IDs set of IDs to get Tmdb content from
      * @return Set of TMDBmovies
      */
-    public Set<MovieDb> getMoviesOfIDs(Set<Integer> IDs)
+    public Set<Movie> getMoviesOfIDs(Set<Integer> IDs)
     {
         return IDs.stream().map(movieID -> getMovieByID(movieID)).collect(Collectors.toSet());
     }
@@ -214,9 +216,19 @@ public class TmdbAPI
      * @param resultPages number of resultpages to return
      * @return set of TMDBmovies
      */
-    public Set<MovieDb> getPopularMovies(int resultPages)
+    public Set<Movie> getPopularMovies(int resultPages)
     {
-        return new HashSet<MovieDb>(tmdbMovies.getPopularMovies("en", resultPages).getResults());
+        /*
+        //return new HashSet<MovieDb>(tmdbMovies.getPopularMovies("en", resultPages).getResults());
+        Set<Movie> set = new HashSet<Movie>();
+        List<MovieDb> movs = tmdbMovies.getPopularMovies("en", resultPages).getResults();
+        for(MovieDb mov: movs){
+            Movie m = new Movie(mov);
+            System.out.println(m.getTitle());
+        }
+        */
+
+        return tmdbMovies.getPopularMovies("en", resultPages).getResults().stream().map(movieDb -> new Movie(movieDb)).collect(Collectors.toSet());
     }
 
     /**
@@ -225,9 +237,14 @@ public class TmdbAPI
      * @param resultPages number of resultpages to return
      * @return  set of TMDBmovies
      */
-    public Set<MovieDb> getSimilarMovies(int movieID, int resultPages)
+    public Set<Movie> getSimilarMovies(int movieID, int resultPages)
     {
-        return new HashSet<MovieDb>(tmdbMovies.getSimilarMovies(movieID, "en", resultPages).getResults());
+        //return new HashSet<Movie>(tmdbMovies.getSimilarMovies(movieID, "en", resultPages).getResults());
+        HashSet<Movie> set = new HashSet<Movie>();
+        for(MovieDb mov: tmdbMovies.getSimilarMovies(movieID,"en", resultPages).getResults()){
+            set.add(new Movie(mov));
+        }
+        return set;
     }
     //------------------------------------------------------------------------------------------------------------------
 

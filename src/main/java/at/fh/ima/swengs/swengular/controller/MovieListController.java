@@ -3,6 +3,8 @@ package at.fh.ima.swengs.swengular.controller;
 import at.fh.ima.swengs.swengular.Exceptions.MovieListNotFoundException;
 import at.fh.ima.swengs.swengular.model.MovieList;
 import at.fh.ima.swengs.swengular.repository.MovieListRepository;
+import info.movito.themoviedbapi.model.MovieDb;
+import jdk.nashorn.internal.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Set;
+
 
 @RestController
 public class MovieListController
@@ -96,15 +99,19 @@ public class MovieListController
 
 
     //------------------------------------------------------------------------------------------------------------------
-    @RequestMapping(value = "/movielist/dummyList", method = RequestMethod.GET)
+    @RequestMapping(value = "/movielist/dummyList",params = { "name" }, method = RequestMethod.GET)
     //------------------------------------------------------------------------------------------------------------------
-    public ResponseEntity<MovieList> getDummyList(@PathVariable String name) {
-
+    public @ResponseBody MovieList  getDummyList(@RequestParam("name") String name) {
+        System.out.println("in dummy list");
+        System.out.println(name);
         MovieList movieList = movieListRepository.findByName(name);
-
-        if (movieList == null) { return new ResponseEntity<MovieList>(HttpStatus.NOT_FOUND); }
-
-        return new ResponseEntity<MovieList>(movieList.loadTmdbContent(), HttpStatus.OK);
+        System.out.println(movieList.getMovieIDs());
+        MovieList resultList = movieList.loadTmdbContent();
+        //System.out.println(resultList.getName());
+        // if (movieList == null) { return null; }
+        //return movieList;
+        System.out.println(resultList.getMovies());
+        return resultList;
     }
 
 
