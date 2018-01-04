@@ -96,6 +96,20 @@ public class MovieListController
 
 
     //------------------------------------------------------------------------------------------------------------------
+    @RequestMapping(value = "/movielist/dummyList", method = RequestMethod.GET)
+    //------------------------------------------------------------------------------------------------------------------
+    public ResponseEntity<MovieList> getDummyList(@PathVariable String name) {
+
+        MovieList movieList = movieListRepository.findByName(name);
+
+        if (movieList == null) { return new ResponseEntity<MovieList>(HttpStatus.NOT_FOUND); }
+
+        return new ResponseEntity<MovieList>(movieList.loadTmdbContent(), HttpStatus.OK);
+    }
+
+
+
+    //------------------------------------------------------------------------------------------------------------------
     @ResponseStatus(value= HttpStatus.NOT_FOUND,reason="This movielist is not found in the system")
     //------------------------------------------------------------------------------------------------------------------
 
