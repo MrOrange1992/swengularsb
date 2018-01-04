@@ -1,4 +1,7 @@
 Person,Date,Hours,Description
+lsch,04.01.2018,5h,"Connection between Frontend and Backend, Mapping from MovieDB Movies to Movies"
+mwol,04.01.2018,5h,"Connection between Frontend and Backend, Mapping from MovieDB Movies to Movies"
+frau,04.01.2018,5h,"Connection between Frontend and Backend, Mapping from MovieDB Movies to Movies"
 frau,18.12.2017,3h,"Work on ER models / Repositories"
 frau,21.12.2017,4h,"Created TMDB-API-Wrapper, implemented tests for Genre/Movie"
 frau,22.12.2017,3h,"Mod of ER-Modell -> Now using Genre/Movie models directly from TMDB, implemented multiple test cases"
