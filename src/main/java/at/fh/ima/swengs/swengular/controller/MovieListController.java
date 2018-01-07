@@ -101,7 +101,8 @@ public class MovieListController
     //------------------------------------------------------------------------------------------------------------------
     @RequestMapping(value = "/movielist/dummyList",params = { "name" }, method = RequestMethod.GET)
     //------------------------------------------------------------------------------------------------------------------
-    public @ResponseBody MovieList  getDummyList(@RequestParam("name") String name) {
+    public @ResponseBody MovieList getDummyList(@RequestParam("name") String name)
+    {
         System.out.println("in dummy list");
         System.out.println(name);
         MovieList movieList = movieListRepository.findByName(name);

@@ -14,15 +14,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-//DEPRECATED
-//Will use TMDBmovie instead (MovieDb)
-
-
-
 
 public class Movie extends MovieDb
 {
-
     private int id;
 
     private String title;
@@ -40,11 +34,10 @@ public class Movie extends MovieDb
     //TODO: Cast
 
 
-    public Movie(){
+    public Movie(){ }
 
-    }
-
-    public Movie(MovieDb mov) {
+    public Movie(MovieDb mov)
+    {
         this.id = mov.getId();
         this.title = mov.getTitle();
         this.posterPath = mov.getPosterPath();
@@ -55,7 +48,8 @@ public class Movie extends MovieDb
     }
 
 
-    public Movie(int id, String title, String posterPath, List<Genre> genres, String homepage, String overview, float userRating) {
+    public Movie(int id, String title, String posterPath, List<Genre> genres, String homepage, String overview, float userRating)
+    {
         this.id = id;
         this.title = title;
         this.posterPath = posterPath;
@@ -130,7 +124,8 @@ public class Movie extends MovieDb
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o)
+    {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
@@ -147,7 +142,8 @@ public class Movie extends MovieDb
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         int result = super.hashCode();
         result = 31 * result + id;
         result = 31 * result + (title != null ? title.hashCode() : 0);
@@ -160,7 +156,8 @@ public class Movie extends MovieDb
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "Movie{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
