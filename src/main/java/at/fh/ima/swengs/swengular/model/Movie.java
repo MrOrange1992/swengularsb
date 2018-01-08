@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 
-public class Movie extends MovieDb
+public class Movie
 {
     private int id;
 
@@ -31,6 +31,8 @@ public class Movie extends MovieDb
 
     private float userRating;
 
+    private String cast;
+
     //TODO: Cast
 
 
@@ -45,6 +47,8 @@ public class Movie extends MovieDb
         this.homepage = mov.getHomepage();
         this.overview = mov.getOverview();
         this.userRating = mov.getUserRating();
+        this.cast="";
+
     }
 
 
@@ -59,17 +63,25 @@ public class Movie extends MovieDb
         this.userRating = userRating;
     }
 
-    @Override
+    public String getCast() {
+        return cast;
+    }
+
+    public void setCast(String cast) {
+        this.cast = cast;
+    }
+
+
     public int getId() {
         return id;
     }
 
-    @Override
+
     public void setId(int id) {
         this.id = id;
     }
 
-    @Override
+
     public String getTitle() {
         return title;
     }
@@ -78,7 +90,7 @@ public class Movie extends MovieDb
         this.title = title;
     }
 
-    @Override
+
     public String getPosterPath() {
         return posterPath;
     }
@@ -87,7 +99,7 @@ public class Movie extends MovieDb
         this.posterPath = posterPath;
     }
 
-    @Override
+
     public List<Genre> getGenres() {
         return genres;
     }
@@ -96,7 +108,7 @@ public class Movie extends MovieDb
         this.genres = genres;
     }
 
-    @Override
+
     public String getHomepage() {
         return homepage;
     }
@@ -105,7 +117,7 @@ public class Movie extends MovieDb
         this.homepage = homepage;
     }
 
-    @Override
+
     public String getOverview() {
         return overview;
     }
@@ -114,7 +126,7 @@ public class Movie extends MovieDb
         this.overview = overview;
     }
 
-    @Override
+
     public float getUserRating() {
         return userRating;
     }
@@ -123,7 +135,7 @@ public class Movie extends MovieDb
         this.userRating = userRating;
     }
 
-    @Override
+
     public boolean equals(Object o)
     {
         if (this == o) return true;
@@ -141,7 +153,7 @@ public class Movie extends MovieDb
         return overview != null ? overview.equals(movie.overview) : movie.overview == null;
     }
 
-    @Override
+
     public int hashCode()
     {
         int result = super.hashCode();
@@ -155,7 +167,7 @@ public class Movie extends MovieDb
         return result;
     }
 
-    @Override
+
     public String toString()
     {
         return "Movie{" +

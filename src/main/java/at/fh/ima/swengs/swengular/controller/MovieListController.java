@@ -8,13 +8,16 @@ import jdk.nashorn.internal.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Set;
 
-
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 public class MovieListController
 {
@@ -97,22 +100,24 @@ public class MovieListController
     }
 
 
-
     //------------------------------------------------------------------------------------------------------------------
-    @RequestMapping(value = "/movielist/dummyList",params = { "name" }, method = RequestMethod.GET)
+    @GetMapping(value = "/movielist/dummyList",params = { "name" }, produces = MediaType.APPLICATION_JSON_VALUE)
     //------------------------------------------------------------------------------------------------------------------
-    public @ResponseBody MovieList getDummyList(@RequestParam("name") String name)
+    public ResponseEntity<MovieList> getDummyList(@RequestParam("name") String name)
     {
-        System.out.println("in dummy list");
-        System.out.println(name);
+        //System.out.println("in dummy list");
+        //System.out.println(name);
         MovieList movieList = movieListRepository.findByName(name);
-        System.out.println(movieList.getMovieIDs());
+        System.out.println(movieList.getOwner().getId());
         MovieList resultList = movieList.loadTmdbContent();
         //System.out.println(resultList.getName());
         // if (movieList == null) { return null; }
         //return movieList;
-        System.out.println(resultList.getMovies());
-        return resultList;
+        //System.out.println(resultList.getMovies());
+        if (resultList == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(resultList, HttpStatus.OK);
     }
 
 
