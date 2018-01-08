@@ -18,9 +18,7 @@ public class User
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private String firstName;
-
-    private String lastName;
+    private String userName;
 
     @JsonIgnore
     private String password;
@@ -38,10 +36,9 @@ public class User
 
     public User() { }
 
-    public User(String firstName, String lastName, String password)
+    public User(String userName, String password)
     {
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.userName = userName;
         this.password = password;
         this.genreIDs = new HashSet<Integer>();
         this.movieLists = new HashSet<MovieList>();
@@ -56,21 +53,9 @@ public class User
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
+    public String getUserName() { return userName; }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+    public void setUserName(String userName) { this.userName = userName; }
 
     public String getPassword() {
         return password;

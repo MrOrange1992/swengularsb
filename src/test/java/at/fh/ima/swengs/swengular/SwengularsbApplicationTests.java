@@ -41,24 +41,15 @@ public class SwengularsbApplicationTests
     {
         //TmdbAPI tmdbAPI = new TmdbAPI();
 
-        User flexBoy = new User("Flex", "Boy", "flexboy");
+        User flexBoy = new User("flexboy","flexboy");
         userRepository.save(flexBoy);
-    }
-
-    //PASS
-    @Test
-    public void findUser()
-    {
-        User flexBoy = userRepository.findByFirstName("Flex");
-
-        System.out.println(flexBoy.getFirstName());
     }
 
     //PASS
     @Test
     public void addMovieListToUser()
     {
-        User flexBoy = userRepository.findByFirstName("Flex");
+        User flexBoy = userRepository.findByUserName("flexboy");
 
         MovieList list1 = new MovieList("bestOf", flexBoy.getId());
 
@@ -69,7 +60,7 @@ public class SwengularsbApplicationTests
     @Test
     public void addMoviesToList()
     {
-        User flexBoy = userRepository.findByFirstName("Flex");
+        User flexBoy = userRepository.findByUserName("flexboy");
 
         MovieList popularMovieList = movieListRepository.findByName("bestOf");
 
@@ -95,7 +86,7 @@ public class SwengularsbApplicationTests
     @Test
     public void addGenresToUser()
     {
-        User flexBoy = userRepository.findByFirstName("Flex");
+        User flexBoy = userRepository.findByUserName("flexboy");
 
         Set<Genre> allGenres = tmdbAPI.getAllGenres();
 
@@ -108,7 +99,7 @@ public class SwengularsbApplicationTests
     @Test
     public void findAllListsByOwner()
     {
-        User flexBoy = userRepository.findByFirstName("Flex");
+        User flexBoy = userRepository.findByUserName("flexboy");
 
         Set<MovieList> resultLists = movieListRepository.findAllByOwnerID(flexBoy.getId());
 
@@ -131,7 +122,7 @@ public class SwengularsbApplicationTests
     {
         Set<User> resultLists = userRepository.findAllByGenreIDsContaining(99);
 
-        resultLists.forEach(user -> System.out.println(user.getFirstName()));
+        resultLists.forEach(user -> System.out.println(user.getUserName()));
     }
 
     //PASS
@@ -163,9 +154,9 @@ public class SwengularsbApplicationTests
     @Test
     public void followUser()
     {
-        User flexBoy = userRepository.findByFirstName("Flex");
+        User flexBoy = userRepository.findByUserName("flexboy");
 
-        User luckyLuke = new User("Lucky", "Luke", "luckyluke");
+        User luckyLuke = new User("luckyluke","luckyluke");
         userRepository.save(luckyLuke);
 
         luckyLuke.addUserFollowing(flexBoy);
@@ -181,7 +172,7 @@ public class SwengularsbApplicationTests
     @Test
     public void getMoviesOfFollowingUserList()
     {
-        User luckyLuke = userRepository.findByFirstName("Lucky");
+        User luckyLuke = userRepository.findByUserName("luckyluke");
 
         Set<MovieList> resultLists = new HashSet<>();
 

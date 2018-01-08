@@ -27,7 +27,6 @@ public class MovieList
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Integer> movieIDs;
 
-
     @Transient
     private Set<Movie> movies;
 
