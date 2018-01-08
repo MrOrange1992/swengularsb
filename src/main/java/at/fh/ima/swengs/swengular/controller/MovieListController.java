@@ -108,7 +108,7 @@ public class MovieListController
         //System.out.println("in dummy list");
         //System.out.println(name);
         MovieList movieList = movieListRepository.findByName(name);
-        System.out.println(movieList.getOwner().getId());
+        System.out.println(movieList.getOwnerID());
         MovieList resultList = movieList.loadTmdbContent();
         //System.out.println(resultList.getName());
         // if (movieList == null) { return null; }

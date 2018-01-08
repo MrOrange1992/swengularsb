@@ -22,9 +22,7 @@ public class MovieList
 
     private String name;
 
-    @ManyToOne()
-    @JsonBackReference
-    private User owner;
+    private long ownerID;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Integer> movieIDs;
@@ -39,10 +37,10 @@ public class MovieList
 
     public MovieList(){ }
 
-    public MovieList(String name, User owner)
+    public MovieList(String name, Long ownerID)
     {
         this.name = name;
-        this.owner = owner;
+        this.ownerID = ownerID;
         this.movieIDs = new HashSet<Integer>();
         //this.movies = tmdbAPI.getMoviesOfIDs(this.movieIDs);
     }
@@ -70,13 +68,9 @@ public class MovieList
         this.name = name;
     }
 
-    public User getOwner() {
-        return owner;
-    }
+    public long getOwnerID() { return ownerID; }
 
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
+    public void setOwnerID(long ownerID) { this.ownerID = ownerID; }
 
     public Set<Integer> getMovieIDs() {
         return movieIDs;

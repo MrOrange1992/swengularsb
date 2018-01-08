@@ -28,7 +28,7 @@ public class User
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Integer> genreIDs;
 
-    @OneToMany (mappedBy = "owner", fetch = FetchType.EAGER)
+    @OneToMany (mappedBy = "ownerID", fetch = FetchType.EAGER)
     @JsonManagedReference
     private Set<MovieList> movieLists;
 

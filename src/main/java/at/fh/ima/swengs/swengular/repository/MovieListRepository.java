@@ -11,7 +11,7 @@ import java.util.Set;
 @RepositoryRestResource
 public interface MovieListRepository extends PagingAndSortingRepository<MovieList, Long>
 {
-    public Set<MovieList> findAllByOwner(@Param("owner") User owner);
+    public Set<MovieList> findAllByOwnerID(@Param("ownerID") Long ownerID);
 
     public MovieList findByName(@Param("name") String name);
 

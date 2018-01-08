@@ -60,7 +60,7 @@ public class SwengularsbApplicationTests
     {
         User flexBoy = userRepository.findByFirstName("Flex");
 
-        MovieList list1 = new MovieList("bestOf", flexBoy);
+        MovieList list1 = new MovieList("bestOf", flexBoy.getId());
 
         movieListRepository.save(list1);
     }
@@ -110,7 +110,7 @@ public class SwengularsbApplicationTests
     {
         User flexBoy = userRepository.findByFirstName("Flex");
 
-        Set<MovieList> resultLists = movieListRepository.findAllByOwner(flexBoy);
+        Set<MovieList> resultLists = movieListRepository.findAllByOwnerID(flexBoy.getId());
 
         resultLists.forEach(list -> System.out.println(list.getName()));
     }
