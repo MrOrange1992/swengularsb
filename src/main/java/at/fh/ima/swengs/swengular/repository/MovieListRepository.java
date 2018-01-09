@@ -20,5 +20,4 @@ public interface MovieListRepository extends PagingAndSortingRepository<MovieLis
     public Set<MovieList> findAllByMovieIDsContaining(@Param("movieID") int movieID);
 
     public Set<MovieList> findBy();
-
 }

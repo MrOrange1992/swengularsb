@@ -11,7 +11,6 @@ import java.util.Set;
 @RepositoryRestResource
 public interface UserRepository extends PagingAndSortingRepository<User, Long>
 {
-    //Get all users
     Set<User> findBy();
 
     User findById(@Param("id") Long id);
@@ -21,5 +20,4 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long>
     Set<User> findAllByUserName(@Param("lastName") String lastName);
 
     Set<User> findAllByGenreIDsContaining(@Param("genreID") int genreID);
-
 }

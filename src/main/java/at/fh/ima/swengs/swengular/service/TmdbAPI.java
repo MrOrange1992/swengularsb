@@ -33,10 +33,6 @@ public class TmdbAPI
 
     private Map<String, Genre> genreNameMap = tmdbApi.getGenre().getGenreList("en").stream()
             .collect(Collectors.toMap(Genre::getName, Function.identity()));
-
-    //DEPRECATED
-    //@Autowired
-    //GenreRepository genreRepository;
     //------------------------------------------------------------------------------------------------------------------
 
 
@@ -57,88 +53,6 @@ public class TmdbAPI
 
     //METHODS
     //------------------------------------------------------------------------------------------------------------------
-    /*** DEPRECATED
-     *
-     * cause genre wants movie object from db that isnt yet there
-     * @param tmdbMovie
-     * @return
-     */
-    /*
-    @Transactional
-    public Movie mapMovie(Movie tmdbMovie)
-    {
-        Movie movie = new Movie();
-
-        //try
-        //{
-            movie.setId(tmdbMovie.getId());
-            movie.setTitle(tmdbMovie.getTitle());
-            movie.setOverview(tmdbMovie.getOverview());
-            movie.setPosterPath(tmdbMovie.getPosterPath());
-            movie.setHomepage(tmdbMovie.getHomepage());
-            movie.setRating(tmdbMovie.getUserRating());
-
-            //can be null
-            if (tmdbMovie.getCast() != null)
-            {
-                for (PersonCast castMember : tmdbMovie.getCast())
-                {
-                    //TODO All: better way to do it or store cast instead of string??
-                    movie.setCast(movie.getCast() + "," + castMember.getName());
-                }
-            }
-            //tmdbMovie.getCast().forEach(castMember -> movie.setCast(movie.getCast() + "," + castMember));
-
-
-            //can be null
-            if (tmdbMovie.getGenres() != null)
-            {
-                for (Genre tmdBGenre : tmdbMovie.getGenres())
-                {
-
-                    //all genres from TMDB already exist after application start
-                    Genre genre = genreRepository.findByName(tmdBGenre.getName());
-                    movie.addGenre(genre);
-                    genre.addMovie(movie);
-                    //TODO FR: persistence.EntityNotFoundException: cause genre wants movie object from db that isnt yet there
-                    genreRepository.save(genre);
-
-                }
-            }
-        //}
-        //catch (Exception e) { System.out.println(e); }
-
-        return movie;
-    }
-
-    /**
-     * Map all "en" Genres from TMDB to our Genre model
-     * This function should be called once @ setup of application
-     *
-     * @return  Collection of all available Genres
-     *
-    public Set<Genre> mapAllTmdbGenres()
-    {
-        TmdbGenre tmdbGenre = tmdbApi.getGenre();
-
-        List<Genre> tmdbGenres = tmdbGenre.getGenreList("en");
-
-        //using lambda expression for mapping all genres
-        //return tmdbGenres.stream().map(genre -> new Genre(genre.getId(), genre.getName())).collect(Collectors.toSet());
-        return null;
-    }
-    */
-
-    /*** DEPRECATED
-     * TODO FR: map function for collection of movies returned as MovieList
-     * @return
-     */
-    public MovieList mapMovies()
-    {
-        return null;
-    }
-
-
     /**
      * Get TMDBmovie by ID
      * @param movieID id of TMDBmovie
@@ -146,37 +60,10 @@ public class TmdbAPI
      */
     public Movie getMovieByID(int movieID)
     {
-        //System.out.println(new Movie(tmdbMovies.getMovie(movieID, "en")).toString());
         return new Movie(tmdbMovies.getMovie(movieID, "en"));
-
-        /*TODO: ResourceNotFound
-            handle ResourceNotFound returned by TMDB if MovieDb ID has been updated in TMDB
-            maybe use update - function (updateTMDBChanges()) from testcases
-            or build custom Exception to Invoke UpdateFunction internally on error
-        */
-
-        /* 26.12.2017 -> resource not found exception returned by TMDB for about 10min
-        try
-        {
-            return tmdbMovies.getMovie(movieID, "en");
-        }
-        catch (Exception e)
-        {
-            return null;
-        }
-        */
     }
 
-    /** DEPRECATED -> handled by MovieList.loadTmdbContent()
-     * Get set of TMDB movies of specified MovieList
-     * @param movieList List to get TMDBmovies from
-     * @return Set of TMDBmovies
 
-    public Set<MovieDb> getMoviesOfList(MovieList movieList)
-    {
-        return movieList.getMovieIDs().stream().map(movieID -> getMovieByID(movieID)).collect(Collectors.toSet());
-    }
-    */
 
     /**
      * Get set of TMDB movies of multiple IDs
@@ -188,19 +75,31 @@ public class TmdbAPI
         return IDs.stream().map(movieID -> getMovieByID(movieID)).collect(Collectors.toSet());
     }
 
+
+
     /**
      * Get TMDBGenre by ID
      * @param genreID ID of TMDBgenre
      * @return TMDBgenre
      */
-    public Genre getGenreByID(int genreID) { return genreIDMap.get(genreID); }
+    public Genre getGenreByID(int genreID)
+    {
+        return genreIDMap.get(genreID);
+    }
+
+
 
     /**
      * Get TMDBGenre by name
      * @param genreName name of TMDBgenre
      * @return TMDBgenre
      */
-    public Genre getGenreByName(String genreName) { return genreNameMap.get(genreName); }
+    public Genre getGenreByName(String genreName)
+    {
+        return genreNameMap.get(genreName);
+    }
+
+
 
     /**
      * Get all TMDBgenres (en)
@@ -211,6 +110,8 @@ public class TmdbAPI
         return new HashSet<Genre>(genreIDMap.values());
     }
 
+
+
     /**
      * Get collection of popular TMDBmovies
      * @param resultPages number of resultpages to return
@@ -218,18 +119,11 @@ public class TmdbAPI
      */
     public Set<Movie> getPopularMovies(int resultPages)
     {
-        /*
-        //return new HashSet<MovieDb>(tmdbMovies.getPopularMovies("en", resultPages).getResults());
-        Set<Movie> set = new HashSet<Movie>();
-        List<MovieDb> movs = tmdbMovies.getPopularMovies("en", resultPages).getResults();
-        for(MovieDb mov: movs){
-            Movie m = new Movie(mov);
-            System.out.println(m.getTitle());
-        }
-        */
-
-        return tmdbMovies.getPopularMovies("en", resultPages).getResults().stream().map(movieDb -> new Movie(movieDb)).collect(Collectors.toSet());
+        return tmdbMovies.getPopularMovies("en", resultPages)
+                .getResults().stream().map(movieDb -> new Movie(movieDb)).collect(Collectors.toSet());
     }
+
+
 
     /**
      * Get collection of similar TMDBmovies
@@ -239,13 +133,11 @@ public class TmdbAPI
      */
     public Set<Movie> getSimilarMovies(int movieID, int resultPages)
     {
-        //return new HashSet<Movie>(tmdbMovies.getSimilarMovies(movieID, "en", resultPages).getResults());
-        HashSet<Movie> set = new HashSet<Movie>();
-        for(MovieDb mov: tmdbMovies.getSimilarMovies(movieID,"en", resultPages).getResults()){
-            set.add(new Movie(mov));
-        }
-        return set;
+        return tmdbMovies.getSimilarMovies(movieID,"en", resultPages)
+                .getResults().stream().map(movieDb -> new Movie(movieDb)).collect(Collectors.toSet());
     }
+
+
 
     /**
      * Function for search movies by name
