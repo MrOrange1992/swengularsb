@@ -1,4 +1,5 @@
 Task/Test cases,Priority,Status,Notes
+"Implement cast mapping in Movie model",H,,"Luki"
 "Communication with tmdb",H,DONE,
 "Get user by ID/Name",H,,"Test DONE"
 "Save user",H,,"Test DONE"

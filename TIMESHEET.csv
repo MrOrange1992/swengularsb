@@ -10,4 +10,6 @@ frau,23.12.2017,0.5h,"Implemented follow user"
 frau,30.12.2017,1h,"Work on test cases"
 frau,02.12.2017,1h,"Updated MovieList model / TmdbAPI / Tests due to model change"
 frau,03.12.2017,1.5h,"Created MovieListController/UserController, implemented basic Requestmappings"
+frau,08.12.2017,2h,"Communication with SWENGular"
+
 
