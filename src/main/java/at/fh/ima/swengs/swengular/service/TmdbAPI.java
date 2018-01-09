@@ -214,7 +214,7 @@ public class TmdbAPI
     /**
      * Get collection of popular TMDBmovies
      * @param resultPages number of resultpages to return
-     * @return set of TMDBmovies
+     * @return set of Movies
      */
     public Set<Movie> getPopularMovies(int resultPages)
     {
@@ -235,7 +235,7 @@ public class TmdbAPI
      * Get collection of similar TMDBmovies
      * @param movieID movie to get similar results from
      * @param resultPages number of resultpages to return
-     * @return  set of TMDBmovies
+     * @return  set of Movies
      */
     public Set<Movie> getSimilarMovies(int movieID, int resultPages)
     {
@@ -245,6 +245,18 @@ public class TmdbAPI
             set.add(new Movie(mov));
         }
         return set;
+    }
+
+    /**
+     * Function for search movies by name
+     * @param movieName name to search for
+     * @param resultPages number of returned resultpages
+     * @return set of Movies
+     */
+    public Set<Movie> getMoviesByName(String movieName, int resultPages)
+    {
+        return tmdbApi.getSearch().searchMovie(movieName, null, "en", false, resultPages)
+                .getResults().stream().map(movieDb -> new Movie(movieDb)).collect(Collectors.toSet());
     }
     //------------------------------------------------------------------------------------------------------------------
 

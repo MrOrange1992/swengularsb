@@ -3,6 +3,7 @@ package at.fh.ima.swengs.swengular.controller;
 import at.fh.ima.swengs.swengular.Exceptions.MovieListNotFoundException;
 import at.fh.ima.swengs.swengular.model.MovieList;
 import at.fh.ima.swengs.swengular.repository.MovieListRepository;
+import at.fh.ima.swengs.swengular.service.TmdbAPI;
 import info.movito.themoviedbapi.model.MovieDb;
 import jdk.nashorn.internal.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class MovieListController
 {
     @Autowired
     MovieListRepository movieListRepository;
+
+    @Autowired
+    TmdbAPI tmdbAPI;
 
 
 
@@ -118,6 +122,18 @@ public class MovieListController
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(resultList, HttpStatus.OK);
+    }
+
+
+    //------------------------------------------------------------------------------------------------------------------
+    @GetMapping(value = "/movielist/searchByName", params = { "movieName" }, produces = MediaType.APPLICATION_JSON_VALUE)
+    //------------------------------------------------------------------------------------------------------------------
+    public ResponseEntity<MovieList> getMoviesByName(@RequestParam("movieName") String movieName)
+    {
+        MovieList movieList = new MovieList();
+        movieList.setMovies(tmdbAPI.getMoviesByName(movieName, 1));
+
+        return new ResponseEntity<>(movieList, HttpStatus.OK);
     }
 
 
