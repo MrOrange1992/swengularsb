@@ -16,4 +16,6 @@ Task/Test cases,Priority,Status,Notes
 "Get similar movies",L,,"Test DONE"
 "Find users by genre",L,,
 "Find lists containing movie",L,,"Test DONE"
+"Order movies by relevance (SET to LIST)",L,,"DONE"
+"Videos missing because of API option?"
 "FLEX: if time implement save actor ids for user, to search movies based on favourite actors",L,,

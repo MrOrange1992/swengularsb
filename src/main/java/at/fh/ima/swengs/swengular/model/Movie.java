@@ -1,18 +1,23 @@
 package at.fh.ima.swengs.swengular.model;
 
+import at.fh.ima.swengs.swengular.service.TmdbAPI;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.sun.tools.javah.Gen;
+//import com.sun.tools.javah.Gen;
+import info.movito.themoviedbapi.TmdbApi;
 import info.movito.themoviedbapi.TmdbMovies;
 import info.movito.themoviedbapi.model.*;
 import info.movito.themoviedbapi.model.MovieList;
 import info.movito.themoviedbapi.model.core.MovieKeywords;
 import info.movito.themoviedbapi.model.core.ResultsPage;
 import info.movito.themoviedbapi.model.people.PersonCast;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class Movie
@@ -33,7 +38,8 @@ public class Movie
 
     private String cast;
 
-    //TODO: Cast
+    @Autowired
+    private TmdbAPI tmdbAPI;
 
 
     public Movie(){ }
@@ -49,6 +55,20 @@ public class Movie
         this.userRating = mov.getUserRating();
         this.cast="";
 
+        try{
+            MovieDb m = tmdbAPI.getMovieDbByID(mov.getId());
+            int limit = 1;
+            for(PersonCast c : m.getCast()) {
+                if(limit < 5) {
+                    System.out.println(this.cast);
+                    this.cast = this.cast + c.getName() + ", ";
+                    limit++;
+                }
+            }
+        }
+        catch (Exception e){
+            System.out.println("Error parsing Cast of Movie " + mov.getTitle());
+        }
     }
 
 

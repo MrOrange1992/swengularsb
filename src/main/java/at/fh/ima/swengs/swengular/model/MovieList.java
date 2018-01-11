@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -28,7 +29,7 @@ public class MovieList
     private Set<Integer> movieIDs;
 
     @Transient
-    private Set<Movie> movies;
+    private List<Movie> movies;
 
     @Transient
     @JsonIgnore
@@ -94,9 +95,9 @@ public class MovieList
         //System.out.println("DEBUG");
     }
 
-    public Set<Movie> getMovies() { return movies; }
+    public List<Movie> getMovies() { return movies; }
 
-    public void setMovies(Set<Movie> movies) { this.movies = movies; }
+    public void setMovies(List<Movie> movies) { this.movies = movies; }
 
     /**
      * Fill list instance with tmdb movies from list of IDs

@@ -54,7 +54,7 @@ public class TmdbAPI
     //METHODS
     //------------------------------------------------------------------------------------------------------------------
     /**
-     * Get TMDBmovie by ID
+     * Get movie by ID
      * @param movieID id of TMDBmovie
      * @return  TMDBmovie
      */
@@ -66,13 +66,22 @@ public class TmdbAPI
 
 
     /**
+     * Get TMDBmovie by ID
+     * @param movieID id of TMDBmovie
+     * @return  TMDBmovie
+     */
+    public MovieDb getMovieDbByID(int movieID) { return tmdbMovies.getMovie(movieID, "en", TmdbMovies.MovieMethod.credits); }
+
+
+
+    /**
      * Get set of TMDB movies of multiple IDs
      * @param IDs set of IDs to get Tmdb content from
      * @return Set of TMDBmovies
      */
-    public Set<Movie> getMoviesOfIDs(Set<Integer> IDs)
+    public List<Movie> getMoviesOfIDs(Set<Integer> IDs)
     {
-        return IDs.stream().map(movieID -> getMovieByID(movieID)).collect(Collectors.toSet());
+        return IDs.stream().map(movieID -> getMovieByID(movieID)).collect(Collectors.toList());
     }
 
 
@@ -117,10 +126,10 @@ public class TmdbAPI
      * @param resultPages number of resultpages to return
      * @return set of Movies
      */
-    public Set<Movie> getPopularMovies(int resultPages)
+    public List<Movie> getPopularMovies(int resultPages)
     {
         return tmdbMovies.getPopularMovies("en", resultPages)
-                .getResults().stream().map(movieDb -> new Movie(movieDb)).collect(Collectors.toSet());
+                .getResults().stream().map(movieDb -> new Movie(movieDb)).collect(Collectors.toList());
     }
 
 
@@ -131,10 +140,10 @@ public class TmdbAPI
      * @param resultPages number of resultpages to return
      * @return  set of Movies
      */
-    public Set<Movie> getSimilarMovies(int movieID, int resultPages)
+    public List<Movie> getSimilarMovies(int movieID, int resultPages)
     {
         return tmdbMovies.getSimilarMovies(movieID,"en", resultPages)
-                .getResults().stream().map(movieDb -> new Movie(movieDb)).collect(Collectors.toSet());
+                .getResults().stream().map(movieDb -> new Movie(movieDb)).collect(Collectors.toList());
     }
 
 
@@ -145,10 +154,10 @@ public class TmdbAPI
      * @param resultPages number of returned resultpages
      * @return set of Movies
      */
-    public Set<Movie> getMoviesByName(String movieName, int resultPages)
+    public List<Movie> getMoviesByName(String movieName, int resultPages)
     {
         return tmdbApi.getSearch().searchMovie(movieName, null, "en", false, resultPages)
-                .getResults().stream().map(movieDb -> new Movie(movieDb)).collect(Collectors.toSet());
+                .getResults().stream().map(movieDb -> new Movie(movieDb)).collect(Collectors.toList());
     }
     //------------------------------------------------------------------------------------------------------------------
 
