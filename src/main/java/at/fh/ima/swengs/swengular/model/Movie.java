@@ -39,7 +39,7 @@ public class Movie
     private String cast;
 
     @Autowired
-    private TmdbAPI tmdbAPI;
+    private TmdbAPI tmdbAPI = new TmdbAPI();
 
 
     public Movie(){ }
@@ -60,14 +60,16 @@ public class Movie
             int limit = 1;
             for(PersonCast c : m.getCast()) {
                 if(limit < 5) {
-                    System.out.println(this.cast);
                     this.cast = this.cast + c.getName() + ", ";
                     limit++;
                 }
             }
+            this.cast = this.cast.substring(0, this.cast.length() - 2);
+            System.out.println(this.cast);
         }
         catch (Exception e){
             System.out.println("Error parsing Cast of Movie " + mov.getTitle());
+            System.out.println(e);
         }
     }
 
