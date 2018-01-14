@@ -2,6 +2,7 @@ package at.fh.ima.swengs.swengular.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import info.movito.themoviedbapi.model.people.PersonCast;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -33,6 +34,9 @@ public class User
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<User> usersFollowing;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<Integer> favouriteActorIDs;
+
 
     public User() { }
 
@@ -43,6 +47,7 @@ public class User
         this.genreIDs = new HashSet<Integer>();
         this.movieLists = new HashSet<MovieList>();
         this.usersFollowing = new HashSet<User>();
+        this.favouriteActorIDs = new HashSet<Integer>();
     }
 
     public long getId() {
@@ -99,5 +104,13 @@ public class User
     public void setUsersFollowing(Set<User> usersFollowing) { this.usersFollowing = usersFollowing; }
 
     public void addUserFollowing(User user) { this.usersFollowing.add(user); }
+
+    public Set<Integer> getFavouriteActorIDs() { return favouriteActorIDs; }
+
+    public void setFavouriteActorIDs(Set<Integer> favouriteActorIDs) { this.favouriteActorIDs = favouriteActorIDs; }
+
+    public void addFavouriteActorID(int actorID) {
+        this.favouriteActorIDs.add(actorID);
+    }
 
 }

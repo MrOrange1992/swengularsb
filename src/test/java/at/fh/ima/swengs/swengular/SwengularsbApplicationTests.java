@@ -229,7 +229,16 @@ public class SwengularsbApplicationTests
     public void movieCastingCast()
     {
         Movie movie = new Movie(tmdbAPI.getMovieDbByID(8844));
-        System.out.println(movie.getCast());
+        movie.getActors().forEach(actor-> System.out.println(actor.getName()));
+    }
+
+    @Test
+    public void searchMoviesByName()
+    {
+        MovieList movieList = new MovieList();
+        movieList.setMovies(tmdbAPI.searchMoviesByName("batman", 1));
+
+        movieList.getMovies().forEach(movie -> System.out.println(movie.getTitle()));
     }
 
 }

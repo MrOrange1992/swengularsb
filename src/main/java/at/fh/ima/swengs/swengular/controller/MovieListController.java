@@ -129,7 +129,7 @@ public class MovieListController
     //------------------------------------------------------------------------------------------------------------------
     @GetMapping(value = "/movielist/searchMoviesByName", params = { "movieName" }, produces = MediaType.APPLICATION_JSON_VALUE)
     //------------------------------------------------------------------------------------------------------------------
-    public ResponseEntity<MovieList> getMoviesByName(@RequestParam("movieName") String movieName)
+    public ResponseEntity<MovieList> searchMoviesByName(@RequestParam("movieName") String movieName)
     {
         MovieList movieList = new MovieList();
         movieList.setMovies(tmdbAPI.searchMoviesByName(movieName, 1));
