@@ -57,7 +57,7 @@ public class Movie
 
         if (movieDb.getCast() != null)
         {
-            movieDb.getCast().forEach(personCast -> this.cast += personCast.getName() + ", ");
+            movieDb.getCast().stream().limit(5).forEach(personCast -> this.cast += personCast.getName() + ", ");
 
             /*
             try

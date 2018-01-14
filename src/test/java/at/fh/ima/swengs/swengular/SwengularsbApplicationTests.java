@@ -1,6 +1,7 @@
 package at.fh.ima.swengs.swengular;
 
 
+import at.fh.ima.swengs.swengular.model.Movie;
 import at.fh.ima.swengs.swengular.model.MovieList;
 import at.fh.ima.swengs.swengular.model.User;
 import at.fh.ima.swengs.swengular.repository.MovieListRepository;
@@ -217,10 +218,18 @@ public class SwengularsbApplicationTests
     }
 
     @Test
-    public void getMovieListByName(){
+    public void getMovieListByName()
+    {
         MovieList testlist = movieListRepository.findByName("bestOf");
         System.out.println(testlist.getName());
     }
 
+
+    @Test
+    public void movieCastingCast()
+    {
+        Movie movie = new Movie(tmdbAPI.getMovieDbByID(8844));
+        System.out.println(movie.getCast());
+    }
 
 }
