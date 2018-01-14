@@ -1,6 +1,7 @@
 package at.fh.ima.swengs.swengular.controller;
 
 import at.fh.ima.swengs.swengular.Exceptions.MovieListNotFoundException;
+import at.fh.ima.swengs.swengular.model.Movie;
 import at.fh.ima.swengs.swengular.model.MovieList;
 import at.fh.ima.swengs.swengular.repository.MovieListRepository;
 import at.fh.ima.swengs.swengular.service.TmdbAPI;
@@ -126,14 +127,22 @@ public class MovieListController
 
 
     //------------------------------------------------------------------------------------------------------------------
-    @GetMapping(value = "/movielist/searchByName", params = { "movieName" }, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/movielist/searchMoviesByName", params = { "movieName" }, produces = MediaType.APPLICATION_JSON_VALUE)
     //------------------------------------------------------------------------------------------------------------------
     public ResponseEntity<MovieList> getMoviesByName(@RequestParam("movieName") String movieName)
     {
         MovieList movieList = new MovieList();
-        movieList.setMovies(tmdbAPI.getMoviesByName(movieName, 1));
+        movieList.setMovies(tmdbAPI.searchMoviesByName(movieName, 1));
 
         return new ResponseEntity<>(movieList, HttpStatus.OK);
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    @GetMapping(value = "/movielist/getMovieDetails", params = { "movieID" }, produces = MediaType.APPLICATION_JSON_VALUE)
+    //------------------------------------------------------------------------------------------------------------------
+    public ResponseEntity<Movie> getMovieDetails(@RequestParam("movieID") int movieID)
+    {
+        return new ResponseEntity<>(tmdbAPI.getMovieByID(movieID), HttpStatus.OK);
     }
 
 

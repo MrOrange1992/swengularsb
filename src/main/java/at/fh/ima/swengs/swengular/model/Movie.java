@@ -38,52 +38,49 @@ public class Movie
 
     private String cast;
 
-    @Autowired
-    private TmdbAPI tmdbAPI = new TmdbAPI();
+    //@Autowired
+    //private TmdbAPI tmdbAPI = new TmdbAPI();
 
 
     public Movie(){ }
 
-    public Movie(MovieDb mov)
+    public Movie(MovieDb movieDb)
     {
-        this.id = mov.getId();
-        this.title = mov.getTitle();
-        this.posterPath = mov.getPosterPath();
-        this.genres = mov.getGenres();
-        this.homepage = mov.getHomepage();
-        this.overview = mov.getOverview();
-        this.userRating = mov.getUserRating();
-        this.cast="";
+        this.id = movieDb.getId();
+        this.title = movieDb.getTitle();
+        this.posterPath = movieDb.getPosterPath();
+        this.genres = movieDb.getGenres();
+        this.homepage = movieDb.getHomepage();
+        this.overview = movieDb.getOverview();
+        this.userRating = movieDb.getUserRating();
+        this.cast = "";
 
-        try{
-            MovieDb m = tmdbAPI.getMovieDbByID(mov.getId());
-            int limit = 1;
-            for(PersonCast c : m.getCast()) {
-                if(limit < 5) {
-                    this.cast = this.cast + c.getName() + ", ";
-                    limit++;
+        if (movieDb.getCast() != null)
+        {
+            movieDb.getCast().forEach(personCast -> this.cast += personCast.getName() + ", ");
+
+            /*
+            try
+            {
+                MovieDb m = tmdbAPI.getMovieDbByID(mov.getId());
+                int limit = 1;
+                for (PersonCast c : m.getCast()) {
+                    if (limit < 5) {
+                        this.cast = this.cast + c.getName() + ", ";
+                        limit++;
+                    }
                 }
+                this.cast = this.cast.substring(0, this.cast.length() - 2);
+                System.out.println(this.cast);
+            } catch (Exception e) {
+                System.out.println("Error parsing Cast of Movie " + mov.getTitle());
+                System.out.println(e);
             }
-            this.cast = this.cast.substring(0, this.cast.length() - 2);
-            System.out.println(this.cast);
-        }
-        catch (Exception e){
-            System.out.println("Error parsing Cast of Movie " + mov.getTitle());
-            System.out.println(e);
+            */
         }
     }
 
 
-    public Movie(int id, String title, String posterPath, List<Genre> genres, String homepage, String overview, float userRating)
-    {
-        this.id = id;
-        this.title = title;
-        this.posterPath = posterPath;
-        this.genres = genres;
-        this.homepage = homepage;
-        this.overview = overview;
-        this.userRating = userRating;
-    }
 
     public String getCast() {
         return cast;
@@ -156,6 +153,7 @@ public class Movie
     public void setUserRating(float userRating) {
         this.userRating = userRating;
     }
+
 
 
     public boolean equals(Object o)

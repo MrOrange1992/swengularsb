@@ -154,7 +154,7 @@ public class TmdbAPI
      * @param resultPages number of returned resultpages
      * @return set of Movies
      */
-    public List<Movie> getMoviesByName(String movieName, int resultPages)
+    public List<Movie> searchMoviesByName(String movieName, int resultPages)
     {
         return tmdbApi.getSearch().searchMovie(movieName, null, "en", false, resultPages)
                 .getResults().stream().map(movieDb -> new Movie(movieDb)).collect(Collectors.toList());
