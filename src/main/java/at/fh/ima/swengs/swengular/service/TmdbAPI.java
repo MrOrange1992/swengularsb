@@ -73,7 +73,7 @@ public class TmdbAPI
      */
     public MovieDb getMovieDbByID(int movieID)
     {
-        return tmdbMovies.getMovie(movieID, "en", TmdbMovies.MovieMethod.credits);
+        return tmdbMovies.getMovie(movieID, "en", TmdbMovies.MovieMethod.credits, TmdbMovies.MovieMethod.videos);
     }
 
 

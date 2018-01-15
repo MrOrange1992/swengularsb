@@ -97,9 +97,9 @@ public class UserController
     //------------------------------------------------------------------------------------------------------------------
     @GetMapping(value = "/user/search", params = { "userName" }, produces = MediaType.APPLICATION_JSON_VALUE)
     //------------------------------------------------------------------------------------------------------------------
-    public ResponseEntity<Set<User>> getUserList(@RequestParam("userName") String userName)
+    public ResponseEntity<Set<User>> searchUserByUserNameContaining(@RequestParam("userName") String userName)
     {
-        Set<User> resultList = userRepository.findAllByUserName(userName);
+        Set<User> resultList = userRepository.findAllByUserNameContaining(userName);
 
         if (resultList == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

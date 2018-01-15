@@ -77,15 +77,11 @@ public class MovieListController
     //------------------------------------------------------------------------------------------------------------------
     @RequestMapping(value = "/movielist", method = RequestMethod.POST)
     //------------------------------------------------------------------------------------------------------------------
-    public ResponseEntity<MovieList> createMovieList(@RequestBody MovieList movieList, UriComponentsBuilder ucBuilder)
+    public ResponseEntity<String> createMovieList(@RequestParam String name)
     {
-        movieListRepository.save(movieList);
+        System.out.println("!!!In controller!!!");
 
-        HttpHeaders headers = new HttpHeaders();
-
-        headers.setLocation(ucBuilder.path("/movielist/{id}").buildAndExpand(movieList.getId()).toUri());
-
-        return new ResponseEntity<MovieList>(headers, HttpStatus.CREATED);
+        return new ResponseEntity<>("Paaaaast", HttpStatus.OK);
     }
 
 
