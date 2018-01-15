@@ -17,9 +17,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.text.html.HTML;
+import java.util.List;
 import java.util.Set;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RestController
 public class MovieListController
 {
@@ -75,14 +77,18 @@ public class MovieListController
 
 
     //------------------------------------------------------------------------------------------------------------------
-    @RequestMapping(value = "/movielist", method = RequestMethod.POST)
+    @RequestMapping(value = "/movielist/{name}", method = RequestMethod.POST, consumes = "application/json")
+    public @ResponseBody String createMovieList(@PathVariable String name){
+        System.out.println(name);
+        return "dummystring";
+    }
     //------------------------------------------------------------------------------------------------------------------
-    public ResponseEntity<String> createMovieList(@RequestParam String name)
+    /*public ResponseEntity<String> createMovieList(@RequestParam String name)
     {
         System.out.println("!!!In controller!!!");
 
         return new ResponseEntity<>("Paaaaast", HttpStatus.OK);
-    }
+    }*/
 
 
 
