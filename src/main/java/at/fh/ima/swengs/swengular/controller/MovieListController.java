@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Set;
 
@@ -31,7 +32,7 @@ public class MovieListController
 
 
 
-    //------------------------------------------------------------------------------------------------------------------
+       //------------------------------------------------------------------------------------------------------------------
     @RequestMapping(value="/movielist", method = RequestMethod.GET)
     //------------------------------------------------------------------------------------------------------------------
     ResponseEntity<Set<MovieList>> getAllMovieLists()
@@ -43,6 +44,16 @@ public class MovieListController
         return new ResponseEntity<Set<MovieList>>(movieListRepository.findBy(), HttpStatus.OK);
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+    @RequestMapping(value="/movielist/{userid}", method = RequestMethod.GET)
+    //------------------------------------------------------------------------------------------------------------------
+    Set<MovieList> getMovieListsForUser(@PathVariable long userid)
+    {
+        Set<MovieList> movieLists = movieListRepository.findAllByOwnerID(userid);
+        if (movieLists == null)
+            throw new MovieListNotFoundException();
+        return movieLists;
+    }
 
 
     //------------------------------------------------------------------------------------------------------------------
@@ -102,6 +113,21 @@ public class MovieListController
         movieListRepository.save(movieListUpdate);
 
         return new ResponseEntity<MovieList>(HttpStatus.NO_CONTENT);
+    }
+
+    @RequestMapping(value = "/addmovietolist/",params = { "movieID", "listID" }, method = RequestMethod.POST)
+    //------------------------------------------------------------------------------------------------------------------
+    public String addMovieToList(@RequestParam("movieID") String movieID, @RequestParam("listID") String listID)
+    {
+        try {
+            int mID = Integer.parseInt(movieID);
+            long lID = Long.parseLong(listID);
+            MovieList movieList = movieListRepository.findById(lID);
+            movieList.addMovieID(mID);
+            return "Success";
+        }catch(Exception e){
+            return "Failure: "+e.getMessage();
+        }
     }
 
 
