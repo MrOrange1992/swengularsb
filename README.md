@@ -7,8 +7,6 @@ Felix Rauchenwald
 
 Markus Wolf
 
-Jashnica Labinot
-
 
 
 ## Release Information

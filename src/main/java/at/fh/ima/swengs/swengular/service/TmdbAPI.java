@@ -11,6 +11,7 @@ import info.movito.themoviedbapi.TmdbMovies;
 import info.movito.themoviedbapi.model.MovieDb;
 import info.movito.themoviedbapi.model.Genre;
 
+import org.hibernate.type.IntegerType;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -70,18 +71,23 @@ public class TmdbAPI
      * @param movieID id of TMDBmovie
      * @return  TMDBmovie
      */
-    public MovieDb getMovieDbByID(int movieID) { return tmdbMovies.getMovie(movieID, "en", TmdbMovies.MovieMethod.credits); }
+    public MovieDb getMovieDbByID(int movieID)
+    {
+        return tmdbMovies.getMovie(movieID, "en", TmdbMovies.MovieMethod.credits, TmdbMovies.MovieMethod.videos);
+    }
 
 
 
     /**
      * Get set of TMDB movies of multiple IDs
-     * @param IDs set of IDs to get Tmdb content from
+     * @param movieIDs set of IDs to get Tmdb content from
      * @return Set of TMDBmovies
      */
-    public List<Movie> getMoviesOfIDs(Set<Integer> IDs)
+    public List<Movie> getMoviesOfIDs(Set<Integer> movieIDs)
     {
-        return IDs.stream().map(movieID -> getMovieByID(movieID)).collect(Collectors.toList());
+        return movieIDs.stream()
+                .map(movieID -> getMovieByID(movieID))
+                .collect(Collectors.toList());
     }
 
 
@@ -116,7 +122,7 @@ public class TmdbAPI
      */
     public Set<Genre> getAllGenres()
     {
-        return new HashSet<Genre>(genreIDMap.values());
+        return new HashSet<>(genreIDMap.values());
     }
 
 
@@ -129,7 +135,10 @@ public class TmdbAPI
     public List<Movie> getPopularMovies(int resultPages)
     {
         return tmdbMovies.getPopularMovies("en", resultPages)
-                .getResults().stream().map(movieDb -> new Movie(movieDb)).collect(Collectors.toList());
+                .getResults()
+                .stream()
+                .map(Movie::new)
+                .collect(Collectors.toList());
     }
 
 
@@ -143,7 +152,10 @@ public class TmdbAPI
     public List<Movie> getSimilarMovies(int movieID, int resultPages)
     {
         return tmdbMovies.getSimilarMovies(movieID,"en", resultPages)
-                .getResults().stream().map(movieDb -> new Movie(movieDb)).collect(Collectors.toList());
+                .getResults()
+                .stream()
+                .map(Movie::new)
+                .collect(Collectors.toList());
     }
 
 
@@ -157,7 +169,10 @@ public class TmdbAPI
     public List<Movie> searchMoviesByName(String movieName, int resultPages)
     {
         return tmdbApi.getSearch().searchMovie(movieName, null, "en", false, resultPages)
-                .getResults().stream().map(movieDb -> new Movie(movieDb)).collect(Collectors.toList());
+                .getResults()
+                .stream()
+                .map(Movie::new)
+                .collect(Collectors.toList());
     }
     //------------------------------------------------------------------------------------------------------------------
 

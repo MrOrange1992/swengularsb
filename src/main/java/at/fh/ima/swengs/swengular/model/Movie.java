@@ -8,8 +8,12 @@ import info.movito.themoviedbapi.TmdbMovies;
 import info.movito.themoviedbapi.model.*;
 import info.movito.themoviedbapi.model.MovieList;
 import info.movito.themoviedbapi.model.core.MovieKeywords;
+import info.movito.themoviedbapi.model.core.NamedIdElement;
 import info.movito.themoviedbapi.model.core.ResultsPage;
+import info.movito.themoviedbapi.model.people.Person;
 import info.movito.themoviedbapi.model.people.PersonCast;
+import info.movito.themoviedbapi.model.people.PersonCrew;
+import org.hibernate.boot.jaxb.SourceType;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
@@ -18,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 
 public class Movie
@@ -25,6 +30,8 @@ public class Movie
     private int id;
 
     private String title;
+
+    private String director;
 
     private String posterPath;
 
@@ -36,13 +43,15 @@ public class Movie
 
     private float userRating;
 
-    private String cast;
+    //private String cast;
+
+    private List<Actor> actors;
 
     //@Autowired
     //private TmdbAPI tmdbAPI = new TmdbAPI();
 
 
-    public Movie(){ }
+    public Movie() { }
 
     public Movie(MovieDb movieDb)
     {
@@ -53,12 +62,31 @@ public class Movie
         this.homepage = movieDb.getHomepage();
         this.overview = movieDb.getOverview();
         this.userRating = movieDb.getUserRating();
-        this.cast = "";
+        //this.cast = "";
 
         if (movieDb.getCast() != null)
         {
-            movieDb.getCast().stream().limit(5).forEach(personCast -> this.cast += personCast.getName() + ", ");
+            this.actors = movieDb.getCast()
+                    .stream()
+                    .limit(5)
+                    .map(Actor::new)
+                    .collect(Collectors.toList());
+        }
 
+        if (movieDb.getCrew() != null)
+        {
+            movieDb.getCrew().forEach(personCrew ->
+            {
+                if (personCrew.getJob().equals("Director")) { this.director = personCrew.getName(); }
+            });
+        }
+        /*
+            this.cast = movieDb.getCast()
+                    .stream()
+                    .limit(5)
+                    .map(NamedIdElement::getName)
+                    .collect(Collectors.joining(", "));
+               */
             /*
             try
             {
@@ -77,18 +105,13 @@ public class Movie
                 System.out.println(e);
             }
             */
-        }
     }
 
 
 
-    public String getCast() {
-        return cast;
-    }
+    //public String getCast() { return cast; }
 
-    public void setCast(String cast) {
-        this.cast = cast;
-    }
+    //public void setCast(String cast) { this.cast = cast; }
 
 
     public int getId() {
@@ -108,6 +131,11 @@ public class Movie
     public void setTitle(String title) {
         this.title = title;
     }
+
+
+    public String getDirector() { return director; }
+
+    public void setDirector(String director) { this.director = director; }
 
 
     public String getPosterPath() {
@@ -153,6 +181,11 @@ public class Movie
     public void setUserRating(float userRating) {
         this.userRating = userRating;
     }
+
+
+    public List<Actor> getActors() { return actors; }
+
+    public void setActors(List<Actor> actors) { this.actors = actors; }
 
 
 

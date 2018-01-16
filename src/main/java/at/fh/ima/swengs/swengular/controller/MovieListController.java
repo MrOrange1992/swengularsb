@@ -18,9 +18,11 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.text.html.HTML;
+import java.util.List;
 import java.util.Set;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RestController
 public class MovieListController
 {
@@ -86,18 +88,18 @@ public class MovieListController
 
 
     //------------------------------------------------------------------------------------------------------------------
-    @RequestMapping(value = "/movielist", method = RequestMethod.POST)
-    //------------------------------------------------------------------------------------------------------------------
-    public ResponseEntity<MovieList> createMovieList(@RequestBody MovieList movieList, UriComponentsBuilder ucBuilder)
-    {
-        movieListRepository.save(movieList);
-
-        HttpHeaders headers = new HttpHeaders();
-
-        headers.setLocation(ucBuilder.path("/movielist/{id}").buildAndExpand(movieList.getId()).toUri());
-
-        return new ResponseEntity<MovieList>(headers, HttpStatus.CREATED);
+    @RequestMapping(value = "/movielist/{name}", method = RequestMethod.POST, consumes = "application/json")
+    public @ResponseBody String createMovieList(@PathVariable String name){
+        System.out.println(name);
+        return "dummystring";
     }
+    //------------------------------------------------------------------------------------------------------------------
+    /*public ResponseEntity<String> createMovieList(@RequestParam String name)
+    {
+        System.out.println("!!!In controller!!!");
+
+        return new ResponseEntity<>("Paaaaast", HttpStatus.OK);
+    }*/
 
 
 
@@ -155,7 +157,7 @@ public class MovieListController
     //------------------------------------------------------------------------------------------------------------------
     @GetMapping(value = "/movielist/searchMoviesByName", params = { "movieName" }, produces = MediaType.APPLICATION_JSON_VALUE)
     //------------------------------------------------------------------------------------------------------------------
-    public ResponseEntity<MovieList> getMoviesByName(@RequestParam("movieName") String movieName)
+    public ResponseEntity<MovieList> searchMoviesByName(@RequestParam("movieName") String movieName)
     {
         MovieList movieList = new MovieList();
         movieList.setMovies(tmdbAPI.searchMoviesByName(movieName, 1));
