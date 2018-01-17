@@ -1,27 +1,8 @@
 package at.fh.ima.swengs.swengular.model;
 
-import at.fh.ima.swengs.swengular.service.TmdbAPI;
-import com.fasterxml.jackson.annotation.JsonProperty;
-//import com.sun.tools.javah.Gen;
-import info.movito.themoviedbapi.TmdbApi;
-import info.movito.themoviedbapi.TmdbMovies;
 import info.movito.themoviedbapi.model.*;
-import info.movito.themoviedbapi.model.MovieList;
-import info.movito.themoviedbapi.model.core.MovieKeywords;
-import info.movito.themoviedbapi.model.core.NamedIdElement;
-import info.movito.themoviedbapi.model.core.ResultsPage;
-import info.movito.themoviedbapi.model.people.Person;
-import info.movito.themoviedbapi.model.people.PersonCast;
-import info.movito.themoviedbapi.model.people.PersonCrew;
-import org.hibernate.boot.jaxb.SourceType;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.persistence.*;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 
@@ -43,12 +24,9 @@ public class Movie
 
     private float userRating;
 
-    //private String cast;
-
     private List<Actor> actors;
 
-    //@Autowired
-    //private TmdbAPI tmdbAPI = new TmdbAPI();
+    private String trailer;
 
 
     public Movie() { }
@@ -62,8 +40,8 @@ public class Movie
         this.homepage = movieDb.getHomepage();
         this.overview = movieDb.getOverview();
         this.userRating = movieDb.getUserRating();
-        //this.cast = "";
 
+        //Mapping for Actors
         if (movieDb.getCast() != null)
         {
             this.actors = movieDb.getCast()
@@ -73,6 +51,7 @@ public class Movie
                     .collect(Collectors.toList());
         }
 
+        //Mapping for Director
         if (movieDb.getCrew() != null)
         {
             movieDb.getCrew().forEach(personCrew ->
@@ -80,44 +59,26 @@ public class Movie
                 if (personCrew.getJob().equals("Director")) { this.director = personCrew.getName(); }
             });
         }
-        /*
-            this.cast = movieDb.getCast()
-                    .stream()
-                    .limit(5)
-                    .map(NamedIdElement::getName)
-                    .collect(Collectors.joining(", "));
-               */
-            /*
-            try
+
+        //Mapping for Trailer
+        // Currently only youtube videos allowed
+        if (movieDb.getVideos() != null)
+        {
+            for (Video video : movieDb.getVideos())
             {
-                MovieDb m = tmdbAPI.getMovieDbByID(mov.getId());
-                int limit = 1;
-                for (PersonCast c : m.getCast()) {
-                    if (limit < 5) {
-                        this.cast = this.cast + c.getName() + ", ";
-                        limit++;
-                    }
+                if (video.getSite().equals("YouTube"))
+                {
+                    this.setTrailer("https://youtu.be/" + movieDb.getVideos().get(0).getKey());
+                    break;
                 }
-                this.cast = this.cast.substring(0, this.cast.length() - 2);
-                System.out.println(this.cast);
-            } catch (Exception e) {
-                System.out.println("Error parsing Cast of Movie " + mov.getTitle());
-                System.out.println(e);
             }
-            */
+        }
     }
-
-
-
-    //public String getCast() { return cast; }
-
-    //public void setCast(String cast) { this.cast = cast; }
 
 
     public int getId() {
         return id;
     }
-
 
     public void setId(int id) {
         this.id = id;
@@ -187,6 +148,10 @@ public class Movie
 
     public void setActors(List<Actor> actors) { this.actors = actors; }
 
+
+    public String getTrailer() { return trailer; }
+
+    public void setTrailer(String trailer) { this.trailer = trailer; }
 
 
     public boolean equals(Object o)

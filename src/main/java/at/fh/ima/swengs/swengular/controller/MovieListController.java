@@ -3,7 +3,9 @@ package at.fh.ima.swengs.swengular.controller;
 import at.fh.ima.swengs.swengular.Exceptions.MovieListNotFoundException;
 import at.fh.ima.swengs.swengular.model.Movie;
 import at.fh.ima.swengs.swengular.model.MovieList;
+import at.fh.ima.swengs.swengular.model.User;
 import at.fh.ima.swengs.swengular.repository.MovieListRepository;
+import at.fh.ima.swengs.swengular.repository.UserRepository;
 import at.fh.ima.swengs.swengular.service.TmdbAPI;
 import info.movito.themoviedbapi.model.MovieDb;
 import jdk.nashorn.internal.parser.JSONParser;
@@ -12,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -28,6 +31,9 @@ public class MovieListController
 {
     @Autowired
     MovieListRepository movieListRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     TmdbAPI tmdbAPI;
@@ -75,7 +81,8 @@ public class MovieListController
     //------------------------------------------------------------------------------------------------------------------
     @RequestMapping(value="/movielist/{id}", method = RequestMethod.DELETE)
     //------------------------------------------------------------------------------------------------------------------
-    ResponseEntity<MovieList> deleteMovieList(@PathVariable long id) {
+    ResponseEntity<MovieList> deleteMovieList(@PathVariable long id)
+    {
         MovieList movieList = movieListRepository.findById(id);
 
         if (movieList == null) { return new ResponseEntity<MovieList>(HttpStatus.NOT_FOUND); }
@@ -134,23 +141,17 @@ public class MovieListController
 
 
     //------------------------------------------------------------------------------------------------------------------
-    @GetMapping(value = "/movielist/dummyList",params = { "name" }, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/movielist/getPopularMovies", produces = MediaType.APPLICATION_JSON_VALUE)
     //------------------------------------------------------------------------------------------------------------------
-    public ResponseEntity<MovieList> getDummyList(@RequestParam("name") String name)
+    public ResponseEntity<MovieList> getPopularMovies()
     {
-        //System.out.println("in dummy list");
-        //System.out.println(name);
-        MovieList movieList = movieListRepository.findByName(name);
-        System.out.println(movieList.getOwnerID());
-        MovieList resultList = movieList.loadTmdbContent();
-        //System.out.println(resultList.getName());
-        // if (movieList == null) { return null; }
-        //return movieList;
-        //System.out.println(resultList.getMovies());
-        if (resultList == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(resultList, HttpStatus.OK);
+        MovieList popularMovieList = new MovieList();
+
+        popularMovieList.setName("Popular Movies");
+
+        popularMovieList.setMovies(tmdbAPI.getPopularMovies(1));
+
+        return new ResponseEntity<>(popularMovieList, HttpStatus.OK);
     }
 
 
