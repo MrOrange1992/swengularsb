@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import javax.persistence.Entity;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.text.html.HTML;
@@ -95,18 +96,15 @@ public class MovieListController
 
 
     //------------------------------------------------------------------------------------------------------------------
-    @RequestMapping(value = "/movielist/{name}", method = RequestMethod.POST, consumes = "application/json")
-    public @ResponseBody String createMovieList(@PathVariable String name){
-        System.out.println(name);
-        return "dummystring";
-    }
-    //------------------------------------------------------------------------------------------------------------------
-    /*public ResponseEntity<String> createMovieList(@RequestParam String name)
+    @RequestMapping(value = "/movielist", method = RequestMethod.POST)
+    public ResponseEntity<MovieList> createMovieList(@RequestBody MovieList movieList, UriComponentsBuilder ucBuilder)
     {
-        System.out.println("!!!In controller!!!");
+        movieListRepository.save(movieList);
 
-        return new ResponseEntity<>("Paaaaast", HttpStatus.OK);
-    }*/
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(ucBuilder.path("/movielist/{id}").buildAndExpand(movieList.getId()).toUri());
+        return new ResponseEntity<MovieList>(headers, HttpStatus.CREATED);
+    }
 
 
 
@@ -123,6 +121,8 @@ public class MovieListController
 
         return new ResponseEntity<MovieList>(HttpStatus.NO_CONTENT);
     }
+
+
 
     @RequestMapping(value = "/addmovietolist/",params = { "movieID", "listID" }, method = RequestMethod.POST)
     //------------------------------------------------------------------------------------------------------------------
