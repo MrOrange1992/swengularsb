@@ -66,7 +66,7 @@ public class Movie
         {
             for (Video video : movieDb.getVideos())
             {
-                if (video.getSite().equals("YouTube"))
+                if (video.getSite().equals("YouTube") && video.getType().equals("Trailer"))
                 {
                     this.setTrailer("https://youtu.be/" + movieDb.getVideos().get(0).getKey());
                     break;
