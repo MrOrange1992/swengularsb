@@ -2,7 +2,7 @@ Task/Test cases,Priority,Status,Notes
 "Implement cast mapping in Movie model",H,DONE
 "Communication with tmdb",H,DONE,
 "Get user by ID/Name",H,,"Test DONE"
-"Save user",H,,"Test DONE"
+"Save user",H,,"DONE"
 "Users - make secure password hash",H,,"If necessary"
 "Follow another user",L,,"Test DONE"
 "Get list by name",L,,"Test DONE"
