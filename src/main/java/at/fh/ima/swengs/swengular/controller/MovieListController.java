@@ -77,17 +77,17 @@ public class MovieListController
         return movieList;
     }*/
 
-    @RequestMapping(value = "/viewmovielist/{listID}", method = RequestMethod.GET)
+    @RequestMapping(value = "/viewmovielist/{id}", method = RequestMethod.GET)
     //------------------------------------------------------------------------------------------------------------------
-    MovieList getMovieListByID(@PathVariable String listID)
+    MovieList getMovieListByID(@PathVariable long id)
     {
-        long lID = Long.parseLong(listID);
-        MovieList movieList = movieListRepository.findById(lID);
-        movieList.setMovies(tmdbAPI.getMoviesOfIDs(movieList.getMovieIDs()));
+        //long lID = Long.parseLong(listID);
+
+        MovieList movieList = movieListRepository.findById(id);
+
         if (movieList == null) throw new MovieListNotFoundException();
 
-        return movieList;
-
+        return movieList.loadTmdbContent();
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -182,7 +182,7 @@ public class MovieListController
     //------------------------------------------------------------------------------------------------------------------
     public ResponseEntity<Movie> getMovieDetails(@RequestParam("movieID") String movieID)
     {
-        return new ResponseEntity<>(tmdbAPI.getFullMovieByID(Integer.parseInt(movieID)), HttpStatus.OK);
+        return new ResponseEntity<>(tmdbAPI.getMovieByID(Integer.parseInt(movieID)), HttpStatus.OK);
     }
 
 

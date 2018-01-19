@@ -15,11 +15,11 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long>
 
     User findById(@Param("id") Long id);
 
-    User findByUserName(@Param("userName") String userName);
+    User findByUsername(@Param("userName") String userName);
 
-    Set<User> findAllByUserName(@Param("userName") String userName);
+    Set<User> findAllByUsername(@Param("username") String username);
 
-    Set<User> findAllByUserNameContaining(@Param("userName") String userName);
+    Set<User> findAllByUsernameContaining(@Param("username") String username);
 
     Set<User> findAllByGenreIDsContaining(@Param("genreID") int genreID);
 }

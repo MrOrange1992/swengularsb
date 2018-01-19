@@ -50,7 +50,7 @@ public class SwengularsbApplicationTests
     @Test
     public void addMovieListToUser()
     {
-        User flexBoy = userRepository.findByUserName("flexboy");
+        User flexBoy = userRepository.findByUsername("flexboy");
 
         MovieList list1 = new MovieList("bestOf", flexBoy.getId());
 
@@ -61,7 +61,7 @@ public class SwengularsbApplicationTests
     @Test
     public void addMoviesToList()
     {
-        User flexBoy = userRepository.findByUserName("flexboy");
+        User flexBoy = userRepository.findByUsername("flexboy");
 
         MovieList popularMovieList = movieListRepository.findByName("bestOf");
 
@@ -87,7 +87,7 @@ public class SwengularsbApplicationTests
     @Test
     public void addGenresToUser()
     {
-        User flexBoy = userRepository.findByUserName("flexboy");
+        User flexBoy = userRepository.findByUsername("flexboy");
 
         Set<Genre> allGenres = tmdbAPI.getAllGenres();
 
@@ -100,7 +100,7 @@ public class SwengularsbApplicationTests
     @Test
     public void findAllListsByOwner()
     {
-        User flexBoy = userRepository.findByUserName("flexboy");
+        User flexBoy = userRepository.findByUsername("flexboy");
 
         Set<MovieList> resultLists = movieListRepository.findAllByOwnerID(flexBoy.getId());
 
@@ -123,7 +123,7 @@ public class SwengularsbApplicationTests
     {
         Set<User> resultLists = userRepository.findAllByGenreIDsContaining(99);
 
-        resultLists.forEach(user -> System.out.println(user.getUserName()));
+        resultLists.forEach(user -> System.out.println(user.getUsername()));
     }
 
     //PASS
@@ -155,7 +155,7 @@ public class SwengularsbApplicationTests
     @Test
     public void followUser()
     {
-        User flexBoy = userRepository.findByUserName("flexboy");
+        User flexBoy = userRepository.findByUsername("flexboy");
 
         User luckyLuke = new User("luckyluke","luckyluke");
         userRepository.save(luckyLuke);
@@ -173,7 +173,7 @@ public class SwengularsbApplicationTests
     @Test
     public void getMoviesOfFollowingUserList()
     {
-        User luckyLuke = userRepository.findByUserName("luckyluke");
+        User luckyLuke = userRepository.findByUsername("luckyluke");
 
         Set<MovieList> resultLists = new HashSet<>();
 

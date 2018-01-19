@@ -11,14 +11,33 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+
 import java.util.Set;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RestController
 public class UserController
 {
     @Autowired
     UserRepository userRepository;
+
+
+
+    //------------------------------------------------------------------------------------------------------------------
+    @RequestMapping(value="/user/authenticate", method = RequestMethod.POST)
+    //------------------------------------------------------------------------------------------------------------------
+    ResponseEntity<User> authenticate(@RequestBody User user)
+    {
+        if (userRepository.findByUsername(user.getUsername()) != null)
+        {
+            if (user.getPassword().equals(userRepository.findByUsername(user.getUsername()).getPassword()))
+            {
+                return new ResponseEntity<User>(user, HttpStatus.OK);
+            }
+        }
+
+        return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+    }
 
 
     //------------------------------------------------------------------------------------------------------------------
@@ -67,15 +86,12 @@ public class UserController
     //------------------------------------------------------------------------------------------------------------------
     @RequestMapping(value = "/user", method = RequestMethod.POST)
     //------------------------------------------------------------------------------------------------------------------
-    public ResponseEntity<User> createUser(@RequestBody User user, UriComponentsBuilder ucBuilder)
+    public ResponseEntity<User> createUser(@RequestBody User user)
     {
         userRepository.save(user);
 
-        HttpHeaders headers = new HttpHeaders();
 
-        headers.setLocation(ucBuilder.path("/user/{id}").buildAndExpand(user.getId()).toUri());
-
-        return new ResponseEntity<User>(headers, HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 
@@ -99,7 +115,7 @@ public class UserController
     //------------------------------------------------------------------------------------------------------------------
     public ResponseEntity<Set<User>> searchUserByUserNameContaining(@RequestParam("userName") String userName)
     {
-        Set<User> resultList = userRepository.findAllByUserNameContaining(userName);
+        Set<User> resultList = userRepository.findAllByUsernameContaining(userName);
 
         if (resultList == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
