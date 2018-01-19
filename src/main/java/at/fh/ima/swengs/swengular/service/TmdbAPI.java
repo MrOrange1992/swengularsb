@@ -54,6 +54,7 @@ public class TmdbAPI
 
     //METHODS
     //------------------------------------------------------------------------------------------------------------------
+
     /**
      * Get movie by ID
      * @param movieID id of TMDBmovie
@@ -64,7 +65,15 @@ public class TmdbAPI
         return new Movie(tmdbMovies.getMovie(movieID, "en"));
     }
 
-
+    /**
+     * Get movie by ID
+     * @param movieID id of TMDBmovie
+     * @return  TMDBmovie
+     */
+    public Movie getFullMovieByID(int movieID)
+    {
+        return new Movie(tmdbMovies.getMovie(movieID, "en",TmdbMovies.MovieMethod.credits, TmdbMovies.MovieMethod.videos));
+    }
 
     /**
      * Get TMDBmovie by ID

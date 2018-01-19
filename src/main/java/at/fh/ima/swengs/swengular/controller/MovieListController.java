@@ -66,18 +66,29 @@ public class MovieListController
 
 
     //------------------------------------------------------------------------------------------------------------------
-    @RequestMapping(value="/movielist/{id}", method = RequestMethod.GET)
+    //@RequestMapping(value="/movielist/{id}", method = RequestMethod.GET)
     //------------------------------------------------------------------------------------------------------------------
-    MovieList getMovieListByID(@PathVariable long id)
+    /*MovieList getMovieListByID(@PathVariable long id)
     {
         MovieList movieList = movieListRepository.findById(id);
 
         if (movieList == null) throw new MovieListNotFoundException();
 
         return movieList;
+    }*/
+
+    @RequestMapping(value = "/viewmovielist/{listID}", method = RequestMethod.GET)
+    //------------------------------------------------------------------------------------------------------------------
+    MovieList getMovieListByID(@PathVariable String listID)
+    {
+        long lID = Long.parseLong(listID);
+        MovieList movieList = movieListRepository.findById(lID);
+        movieList.setMovies(tmdbAPI.getMoviesOfIDs(movieList.getMovieIDs()));
+        if (movieList == null) throw new MovieListNotFoundException();
+
+        return movieList;
+
     }
-
-
 
     //------------------------------------------------------------------------------------------------------------------
     @RequestMapping(value="/movielist/{id}", method = RequestMethod.DELETE)
@@ -169,9 +180,9 @@ public class MovieListController
     //------------------------------------------------------------------------------------------------------------------
     @GetMapping(value = "/movielist/getMovieDetails", params = { "movieID" }, produces = MediaType.APPLICATION_JSON_VALUE)
     //------------------------------------------------------------------------------------------------------------------
-    public ResponseEntity<Movie> getMovieDetails(@RequestParam("movieID") int movieID)
+    public ResponseEntity<Movie> getMovieDetails(@RequestParam("movieID") String movieID)
     {
-        return new ResponseEntity<>(tmdbAPI.getMovieByID(movieID), HttpStatus.OK);
+        return new ResponseEntity<>(tmdbAPI.getFullMovieByID(Integer.parseInt(movieID)), HttpStatus.OK);
     }
 
 
