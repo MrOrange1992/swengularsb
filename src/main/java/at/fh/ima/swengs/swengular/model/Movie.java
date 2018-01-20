@@ -37,6 +37,10 @@ public class Movie
         this.title = movieDb.getTitle();
         this.posterPath = movieDb.getPosterPath();
         this.genres = movieDb.getGenres();
+        /*this.genres = movieDb.getGenres()
+                .stream()
+                .map(Genre::new)
+                .collect(Collectors.toList());*/
         this.homepage = movieDb.getHomepage();
         this.overview = movieDb.getOverview();
         this.userRating = movieDb.getUserRating();

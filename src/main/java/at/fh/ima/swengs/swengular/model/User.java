@@ -40,7 +40,17 @@ public class User
 
     public User() { }
 
-    public User(String username, String password)
+    /*public User(String username, String password)
+    {
+        this.username = username;
+        this.password = password;
+        this.genreIDs = new HashSet<Integer>();
+        this.movieLists = new HashSet<MovieList>();
+        this.usersFollowing = new HashSet<User>();
+        this.favouriteActorIDs = new HashSet<Integer>();
+    }*/
+
+    public User(String username, String password, String genreIDs)
     {
         this.username = username;
         this.password = password;

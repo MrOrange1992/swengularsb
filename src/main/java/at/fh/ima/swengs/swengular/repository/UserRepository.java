@@ -1,6 +1,5 @@
 package at.fh.ima.swengs.swengular.repository;
 
-//import at.fh.ima.swengs.swengular.model.Genre;
 import at.fh.ima.swengs.swengular.model.User;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;

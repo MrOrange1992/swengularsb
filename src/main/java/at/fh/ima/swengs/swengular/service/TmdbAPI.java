@@ -1,7 +1,6 @@
 package at.fh.ima.swengs.swengular.service;
 
 //DEPRECATED
-//import at.fh.ima.swengs.swengular.model.Genre;
 //import at.fh.ima.swengs.swengular.model.Movie;
 import at.fh.ima.swengs.swengular.model.Movie;
 import at.fh.ima.swengs.swengular.model.MovieList;

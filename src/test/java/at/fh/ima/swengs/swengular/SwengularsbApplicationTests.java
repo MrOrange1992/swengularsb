@@ -42,7 +42,7 @@ public class SwengularsbApplicationTests
     {
         //TmdbAPI tmdbAPI = new TmdbAPI();
 
-        User flexBoy = new User("flexboy","flexboy");
+        User flexBoy = new User("flexboy","flexboy","");
         userRepository.save(flexBoy);
     }
 
@@ -157,7 +157,7 @@ public class SwengularsbApplicationTests
     {
         User flexBoy = userRepository.findByUsername("flexboy");
 
-        User luckyLuke = new User("luckyluke","luckyluke");
+        User luckyLuke = new User("luckyluke","luckyluke","");
         userRepository.save(luckyLuke);
 
         luckyLuke.addUserFollowing(flexBoy);
