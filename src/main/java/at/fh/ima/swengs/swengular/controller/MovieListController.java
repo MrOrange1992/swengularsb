@@ -7,6 +7,9 @@ import at.fh.ima.swengs.swengular.model.User;
 import at.fh.ima.swengs.swengular.repository.MovieListRepository;
 import at.fh.ima.swengs.swengular.repository.UserRepository;
 import at.fh.ima.swengs.swengular.service.TmdbAPI;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import info.movito.themoviedbapi.model.MovieDb;
 import jdk.nashorn.internal.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +26,10 @@ import javax.persistence.Entity;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.text.html.HTML;
+import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @CrossOrigin(origins = "*")
@@ -77,8 +83,16 @@ public class MovieListController
         return movieList;
     }*/
 
-    @RequestMapping(value = "/viewmovielist/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/listownername/{id}", method = RequestMethod.GET)
     //------------------------------------------------------------------------------------------------------------------
+    String getMovieListOwner(@PathVariable long id)
+    {
+        User owner = userRepository.findById(id);
+        return owner.getUsername();
+    }
+
+    @RequestMapping(value = "/viewmovielist/{id}", method = RequestMethod.GET)
+        //------------------------------------------------------------------------------------------------------------------
     MovieList getMovieListByID(@PathVariable long id)
     {
         //long lID = Long.parseLong(listID);
@@ -88,6 +102,20 @@ public class MovieListController
         if (movieList == null) throw new MovieListNotFoundException();
 
         return movieList.loadTmdbContent();
+    }
+
+    @RequestMapping(value = "/movielistids/{id}", method = RequestMethod.GET)
+        //------------------------------------------------------------------------------------------------------------------
+    Set<Long> getMovieListIDs(@PathVariable long id)
+    {
+
+        User owner = userRepository.findById(id);
+        Set<MovieList> lists = owner.getMovieLists();
+        Set<Long> ids = new HashSet<Long>();
+        for(MovieList list : lists){
+            ids.add(list.getId());
+        }
+        return ids;
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -135,21 +163,64 @@ public class MovieListController
 
 
 
-    @RequestMapping(value = "/addmovietolist/",params = { "movieID", "listID" }, method = RequestMethod.POST)
+    @PostMapping(value = "/addmovietolist")
     //------------------------------------------------------------------------------------------------------------------
-    public String addMovieToList(@RequestParam("movieID") String movieID, @RequestParam("listID") String listID)
+    public String addMovieToList(@RequestBody String requestString)
     {
+        ObjectMapper mapper = new ObjectMapper();
         try {
-            int mID = Integer.parseInt(movieID);
-            long lID = Long.parseLong(listID);
+            Map<String,String> map = mapper.readValue(requestString, Map.class);
+            int mID = Integer.parseInt(map.get("movieID"));
+            long lID = Long.parseLong(map.get("listID"));
             MovieList movieList = movieListRepository.findById(lID);
             movieList.addMovieID(mID);
-            return "Success";
-        }catch(Exception e){
+            movieListRepository.save(movieList);
+            return "Successfully added Movie to List!";
+        } catch (Exception e) {
             return "Failure: "+e.getMessage();
         }
+
     }
 
+    @PostMapping(value = "/removemoviefromlist")
+    //------------------------------------------------------------------------------------------------------------------
+    public String removeMovieFromList(@RequestBody String requestString)
+    {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            Map<String,String> map = mapper.readValue(requestString, Map.class);
+            int mID = Integer.parseInt(map.get("movieID"));
+            long lID = Long.parseLong(map.get("listID"));
+            MovieList movieList = movieListRepository.findById(lID);
+            movieList.removeMovieID(mID);
+            movieListRepository.save(movieList);
+            return "Successfully removed Movie from List!";
+        } catch (Exception e) {
+            return "Failure: "+e.getMessage();
+        }
+
+    }
+
+    @PostMapping(value = "/removelistfromuser")
+    //------------------------------------------------------------------------------------------------------------------
+    public String removeListFromUser(@RequestBody String requestString)
+    {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            Map<String,String> map = mapper.readValue(requestString, Map.class);
+            long lID = Long.parseLong(map.get("listID"));
+            MovieList movieList = movieListRepository.findById(lID);
+            //User owner = userRepository.findById(movieList.getOwnerID());
+            //Set<MovieList> lists = owner.getMovieLists();
+            //lists.remove(movieList);
+            movieListRepository.delete(movieList.getId());
+
+            return "Successfully removed List from User!";
+        } catch (Exception e) {
+            return "Failure: "+e.getMessage();
+        }
+
+    }
 
     //------------------------------------------------------------------------------------------------------------------
     @GetMapping(value = "/movielist/getPopularMovies", produces = MediaType.APPLICATION_JSON_VALUE)
