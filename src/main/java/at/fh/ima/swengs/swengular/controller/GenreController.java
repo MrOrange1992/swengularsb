@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Set;
 
 @CrossOrigin(origins = "*")
@@ -22,11 +23,8 @@ public class GenreController {
     //------------------------------------------------------------------------------------------------------------------
     @RequestMapping(value="/genre", method = RequestMethod.GET)
     //------------------------------------------------------------------------------------------------------------------
-    ResponseEntity<Set<Genre>> getGenres()
+    ResponseEntity<Set<Genre>> getAllGenres()
     {
-        Set<info.movito.themoviedbapi.model.Genre> test = tmdbAPI.getAllGenres();
-        Set<info.movito.themoviedbapi.model.Genre> test2 = tmdbAPI.getAllGenres();
-
-        return new ResponseEntity<Set<Genre>>(test, HttpStatus.OK);
+        return new ResponseEntity<>(tmdbAPI.getAllGenres(), HttpStatus.OK);
     }
 }

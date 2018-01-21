@@ -28,11 +28,13 @@ public class UserController
     //------------------------------------------------------------------------------------------------------------------
     ResponseEntity<User> authenticate(@RequestBody User user)
     {
-        if (userRepository.findByUsername(user.getUsername()) != null)
+        User userToAuthenticate = userRepository.findByUsername(user.getUsername());
+
+        if (userToAuthenticate != null)
         {
-            if (user.getPassword().equals(userRepository.findByUsername(user.getUsername()).getPassword()))
+            if (user.getPassword().equals(userToAuthenticate.getPassword()))
             {
-                return new ResponseEntity<User>(user, HttpStatus.OK);
+                return new ResponseEntity<User>(userToAuthenticate, HttpStatus.OK);
             }
         }
 
@@ -41,7 +43,7 @@ public class UserController
 
 
     //------------------------------------------------------------------------------------------------------------------
-    @RequestMapping(value="/user", method = RequestMethod.GET)
+    @RequestMapping(value="/users", method = RequestMethod.GET)
     //------------------------------------------------------------------------------------------------------------------
     ResponseEntity<Set<User>> getUsers()
     {
