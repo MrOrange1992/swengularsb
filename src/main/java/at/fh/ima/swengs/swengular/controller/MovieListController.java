@@ -119,11 +119,11 @@ public class MovieListController
     //------------------------------------------------------------------------------------------------------------------
     @RequestMapping(value = "/movielist/", method = RequestMethod.POST, params = "action=createMovieList")
     //------------------------------------------------------------------------------------------------------------------
-    public ResponseEntity<MovieList> createMovieList(@RequestBody MovieList movieList)
+    public ResponseEntity<String> createMovieList(@RequestBody MovieList movieList)
     {
         movieListRepository.save(movieList);
 
-        return new ResponseEntity<MovieList>(HttpStatus.CREATED);
+        return new ResponseEntity<String>("Created Movielist: " + movieList.getName(), HttpStatus.CREATED);
     }
 
 
