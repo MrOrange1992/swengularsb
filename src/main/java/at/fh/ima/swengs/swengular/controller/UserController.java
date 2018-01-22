@@ -24,7 +24,7 @@ public class UserController
 
     // LOGIN
     //------------------------------------------------------------------------------------------------------------------
-    @RequestMapping(value="/user/authenticate", method = RequestMethod.POST)
+    @RequestMapping(value="/user/authenticate", method = RequestMethod.POST/*, params = "action=authenticateUser"*/)
     //------------------------------------------------------------------------------------------------------------------
     ResponseEntity<User> authenticate(@RequestBody User user)
     {
@@ -45,7 +45,7 @@ public class UserController
 
     // CREATE
     //------------------------------------------------------------------------------------------------------------------
-    @RequestMapping(value = "/user", method = RequestMethod.POST)
+    @RequestMapping(value = "/user", method = RequestMethod.POST, params = "action=createUser")
     //------------------------------------------------------------------------------------------------------------------
     public ResponseEntity<User> createUser(@RequestBody User user)
     {
@@ -58,7 +58,7 @@ public class UserController
 
     // UPDATE
     //------------------------------------------------------------------------------------------------------------------
-    @RequestMapping(value = "/users/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/user/{id}", method = RequestMethod.PUT, params = "action=updateUser")
     //------------------------------------------------------------------------------------------------------------------
     public ResponseEntity<User> updateUser(@PathVariable long id, @RequestBody User userUpdate)
     {
@@ -82,7 +82,7 @@ public class UserController
 
     // GET ALL USERS
     //------------------------------------------------------------------------------------------------------------------
-    @RequestMapping(value="/users", method = RequestMethod.GET)
+    @RequestMapping(value="/user/", method = RequestMethod.GET, params = "action=getAllUsers")
     //------------------------------------------------------------------------------------------------------------------
     ResponseEntity<Set<User>> getUsers()
     {
@@ -97,24 +97,24 @@ public class UserController
 
     // GET USER BY ID
     //------------------------------------------------------------------------------------------------------------------
-    @RequestMapping(value="/user/{id}", method = RequestMethod.GET)
+    @RequestMapping(value="/user/{id}", method = RequestMethod.GET, params = "action=getUserByID")
     //------------------------------------------------------------------------------------------------------------------
-    User getUserByID(@PathVariable long id)
+    ResponseEntity<User> getUserByID(@PathVariable long id)
     {
         User user = userRepository.findById(id);
 
         if (user == null) throw new UserNotFoundException();
 
-        return user;
+        return new ResponseEntity<User>(user, HttpStatus.OK);
     }
 
 
 
     // USER SEARCH
     //------------------------------------------------------------------------------------------------------------------
-    @GetMapping(value = "/user/search", params = { "userName" }, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/{userName}", method = RequestMethod.GET, params = "action=search" )
     //------------------------------------------------------------------------------------------------------------------
-    public ResponseEntity<Set<User>> searchUserByUserNameContaining(@RequestParam("userName") String userName)
+    public ResponseEntity<Set<User>> searchUserByUserNameContaining(@PathVariable("userName") String userName)
     {
         Set<User> resultList = userRepository.findAllByUsernameContaining(userName);
 
@@ -128,9 +128,9 @@ public class UserController
 
     // FOLLOW
     //------------------------------------------------------------------------------------------------------------------
-    @RequestMapping(value = "/user/follow", method = RequestMethod.POST)
+    @RequestMapping(value = "/user/{id}", method = RequestMethod.PUT, params = "action=follow")
     //------------------------------------------------------------------------------------------------------------------
-    public ResponseEntity<User> followUser(@RequestParam("userID") long userID,  @RequestParam long userToFollowID)
+    public ResponseEntity<User> followUser(@PathVariable("id") long userID,  @RequestBody long userToFollowID)
     {
         User activeUser = userRepository.findById(userID);
 

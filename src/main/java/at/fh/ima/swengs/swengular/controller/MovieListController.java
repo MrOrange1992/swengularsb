@@ -31,6 +31,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -48,80 +50,135 @@ public class MovieListController
 
 
        //------------------------------------------------------------------------------------------------------------------
-    @RequestMapping(value="/movielist", method = RequestMethod.GET)
+    @RequestMapping(value="/movielist", method = RequestMethod.GET, params = "action=getAllMovieLists")
     //------------------------------------------------------------------------------------------------------------------
     ResponseEntity<Set<MovieList>> getAllMovieLists()
     {
         Iterable<MovieList> movieLists = movieListRepository.findAll();
+
         if (movieLists == null || !movieLists.iterator().hasNext())
             return new ResponseEntity<Set<MovieList>>(HttpStatus.NO_CONTENT);
 
         return new ResponseEntity<Set<MovieList>>(movieListRepository.findBy(), HttpStatus.OK);
     }
 
+
+
     //------------------------------------------------------------------------------------------------------------------
-    @RequestMapping(value="/movielist/{userid}", method = RequestMethod.GET)
+    @RequestMapping(value="/movielist/{id}", method = RequestMethod.GET, params = "action=getMovieListsOfUser")
     //------------------------------------------------------------------------------------------------------------------
-    Set<MovieList> getMovieListsForUser(@PathVariable long userid)
+    ResponseEntity<Set<MovieList>> getMovieListsOfUser(@PathVariable long id)
     {
-        Set<MovieList> movieLists = movieListRepository.findAllByOwnerID(userid);
-        if (movieLists == null)
-            throw new MovieListNotFoundException();
-        return movieLists;
+        Set<MovieList> movieLists = movieListRepository.findAllByOwnerID(id);
+        if (movieLists == null)  new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<Set<MovieList>>(movieLists, HttpStatus.OK);
     }
 
 
+
     //------------------------------------------------------------------------------------------------------------------
-    //@RequestMapping(value="/movielist/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/movielist/{id}", method = RequestMethod.GET, params = "action=getOwnerName")
     //------------------------------------------------------------------------------------------------------------------
-    /*MovieList getMovieListByID(@PathVariable long id)
+    ResponseEntity<String> getOwnerName(@PathVariable long id)
+    {
+        User owner = userRepository.findById(id);
+        return new ResponseEntity<String>(owner.getUsername(), HttpStatus.OK);
+    }
+
+
+
+    //------------------------------------------------------------------------------------------------------------------
+    @RequestMapping(value = "/movielist/{id}", method = RequestMethod.GET, params = "action=getMovieListByID")
+    //------------------------------------------------------------------------------------------------------------------
+    ResponseEntity<MovieList> getMovieListByID(@PathVariable long id)
     {
         MovieList movieList = movieListRepository.findById(id);
 
-        if (movieList == null) throw new MovieListNotFoundException();
+        if (movieList == null) new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-        return movieList;
-    }*/
-
-    @RequestMapping(value = "/listownername/{id}", method = RequestMethod.GET)
-    //------------------------------------------------------------------------------------------------------------------
-    String getMovieListOwner(@PathVariable long id)
-    {
-        User owner = userRepository.findById(id);
-        return owner.getUsername();
+        return new ResponseEntity<>(movieList.loadTmdbContent(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/viewmovielist/{id}", method = RequestMethod.GET)
-        //------------------------------------------------------------------------------------------------------------------
-    MovieList getMovieListByID(@PathVariable long id)
-    {
-        //long lID = Long.parseLong(listID);
 
+
+    //------------------------------------------------------------------------------------------------------------------
+    @RequestMapping(value = "/movielist/{id}", method = RequestMethod.GET, params = "action=getMovieListIDsOfOwner")
+    //------------------------------------------------------------------------------------------------------------------
+    ResponseEntity<Set<Long>> getMovieListIDsOfOwner(@PathVariable long id)
+    {
+        User owner = userRepository.findById(id);
+
+        Set<Long> movieListIDs = owner.getMovieLists().stream().map(movieList -> movieList.getId()).collect(Collectors.toSet());
+
+        return new ResponseEntity<>(movieListIDs, HttpStatus.OK);
+    }
+
+
+
+    //------------------------------------------------------------------------------------------------------------------
+    @RequestMapping(value = "/movielist/", method = RequestMethod.POST, params = "action=createMovieList")
+    //------------------------------------------------------------------------------------------------------------------
+    public ResponseEntity<MovieList> createMovieList(@RequestBody MovieList movieList)
+    {
+        movieListRepository.save(movieList);
+
+        return new ResponseEntity<MovieList>(HttpStatus.CREATED);
+    }
+
+
+
+    //------------------------------------------------------------------------------------------------------------------
+    @RequestMapping(value = "/movielist/{id}", method = RequestMethod.PUT, params = "action=updateMovieList")
+    //------------------------------------------------------------------------------------------------------------------
+    public ResponseEntity<MovieList> updateMovieList(@PathVariable long id, @RequestBody MovieList movieListUpdate)
+    {
         MovieList movieList = movieListRepository.findById(id);
 
-        if (movieList == null) throw new MovieListNotFoundException();
+        if (movieList == null) { return new ResponseEntity<MovieList>(HttpStatus.NOT_FOUND); }
 
-        return movieList.loadTmdbContent();
+        movieListRepository.save(movieListUpdate);
+
+        return new ResponseEntity<MovieList>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/movielistids/{id}", method = RequestMethod.GET)
-        //------------------------------------------------------------------------------------------------------------------
-    Set<Long> getMovieListIDs(@PathVariable long id)
+
+
+    @RequestMapping(value = "/movielist/{id}", method = RequestMethod.PUT, params = "action=addMovieToList")
+    //------------------------------------------------------------------------------------------------------------------
+    public ResponseEntity<String> addMovieToList(@PathVariable long id, @RequestBody int movieID)
     {
+        MovieList movieList = movieListRepository.findById(id);
 
-        User owner = userRepository.findById(id);
-        Set<MovieList> lists = owner.getMovieLists();
-        Set<Long> ids = new HashSet<Long>();
-        for(MovieList list : lists){
-            ids.add(list.getId());
-        }
-        return ids;
+        if (movieList == null) { return new ResponseEntity<String>(HttpStatus.NOT_FOUND); }
+
+        movieList.addMovieID(movieID);
+        movieListRepository.save(movieList);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
+
+    @RequestMapping(value = "/movielist/{id}", method = RequestMethod.PUT, params = "action=deleteMovieFromList")
     //------------------------------------------------------------------------------------------------------------------
-    @RequestMapping(value="/movielist/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteMovieFromList(@PathVariable long id, @RequestBody int movieID)
+    {
+        MovieList movieList = movieListRepository.findById(id);
+
+        if (movieList == null) { return new ResponseEntity<String>(HttpStatus.NOT_FOUND); }
+
+        movieList.removeMovieID(movieID);
+        movieListRepository.save(movieList);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+
+    @RequestMapping(value = "/movielist/{id}", method = RequestMethod.DELETE, params = "action=deleteMovieList")
     //------------------------------------------------------------------------------------------------------------------
-    ResponseEntity<MovieList> deleteMovieList(@PathVariable long id)
+    public ResponseEntity<MovieList> deleteMovieList(@PathVariable long id)
     {
         MovieList movieList = movieListRepository.findById(id);
 
@@ -129,101 +186,13 @@ public class MovieListController
 
         movieListRepository.delete(movieList);
 
-        return new ResponseEntity<MovieList>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<MovieList>(HttpStatus.OK);
     }
 
 
 
     //------------------------------------------------------------------------------------------------------------------
-    @RequestMapping(value = "/movielist", method = RequestMethod.POST)
-    public ResponseEntity<MovieList> createMovieList(@RequestBody MovieList movieList, UriComponentsBuilder ucBuilder)
-    {
-        movieListRepository.save(movieList);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("/movielist/{id}").buildAndExpand(movieList.getId()).toUri());
-        return new ResponseEntity<MovieList>(headers, HttpStatus.CREATED);
-    }
-
-
-
-    //------------------------------------------------------------------------------------------------------------------
-    @RequestMapping(value = "/movielist/{id}", method = RequestMethod.PUT)
-    //------------------------------------------------------------------------------------------------------------------
-    public ResponseEntity<MovieList> updateMovieList(@PathVariable long id,@RequestBody MovieList movieListUpdate) {
-
-        MovieList movieList = movieListRepository.findById(id);
-
-        if (movieList == null) { return new ResponseEntity<MovieList>(HttpStatus.NOT_FOUND); }
-
-        movieListRepository.save(movieListUpdate);
-
-        return new ResponseEntity<MovieList>(HttpStatus.NO_CONTENT);
-    }
-
-
-
-    @PostMapping(value = "/addmovietolist")
-    //------------------------------------------------------------------------------------------------------------------
-    public String addMovieToList(@RequestBody String requestString)
-    {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            Map<String,String> map = mapper.readValue(requestString, Map.class);
-            int mID = Integer.parseInt(map.get("movieID"));
-            long lID = Long.parseLong(map.get("listID"));
-            MovieList movieList = movieListRepository.findById(lID);
-            movieList.addMovieID(mID);
-            movieListRepository.save(movieList);
-            return "Successfully added Movie to List!";
-        } catch (Exception e) {
-            return "Failure: "+e.getMessage();
-        }
-
-    }
-
-    @PostMapping(value = "/removemoviefromlist")
-    //------------------------------------------------------------------------------------------------------------------
-    public String removeMovieFromList(@RequestBody String requestString)
-    {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            Map<String,String> map = mapper.readValue(requestString, Map.class);
-            int mID = Integer.parseInt(map.get("movieID"));
-            long lID = Long.parseLong(map.get("listID"));
-            MovieList movieList = movieListRepository.findById(lID);
-            movieList.removeMovieID(mID);
-            movieListRepository.save(movieList);
-            return "Successfully removed Movie from List!";
-        } catch (Exception e) {
-            return "Failure: "+e.getMessage();
-        }
-
-    }
-
-    @PostMapping(value = "/removelistfromuser")
-    //------------------------------------------------------------------------------------------------------------------
-    public String removeListFromUser(@RequestBody String requestString)
-    {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            Map<String,String> map = mapper.readValue(requestString, Map.class);
-            long lID = Long.parseLong(map.get("listID"));
-            MovieList movieList = movieListRepository.findById(lID);
-            //User owner = userRepository.findById(movieList.getOwnerID());
-            //Set<MovieList> lists = owner.getMovieLists();
-            //lists.remove(movieList);
-            movieListRepository.delete(movieList.getId());
-
-            return "Successfully removed List from User!";
-        } catch (Exception e) {
-            return "Failure: "+e.getMessage();
-        }
-
-    }
-
-    //------------------------------------------------------------------------------------------------------------------
-    @GetMapping(value = "/movielist/getPopularMovies", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/movielist/", method = RequestMethod.GET, params = "action=getPopularMovies")
     //------------------------------------------------------------------------------------------------------------------
     public ResponseEntity<MovieList> getPopularMovies()
     {
@@ -237,10 +206,11 @@ public class MovieListController
     }
 
 
+
     //------------------------------------------------------------------------------------------------------------------
-    @GetMapping(value = "/movielist/searchMoviesByName", params = { "movieName" }, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/movielist/{movieName}", method = RequestMethod.GET, params = "action=searchByName")
     //------------------------------------------------------------------------------------------------------------------
-    public ResponseEntity<MovieList> searchMoviesByName(@RequestParam("movieName") String movieName)
+    public ResponseEntity<MovieList> searchMoviesByName(@PathVariable("movieName") String movieName)
     {
         MovieList movieList = new MovieList();
         movieList.setMovies(tmdbAPI.searchMoviesByName(movieName, 1));
@@ -248,12 +218,14 @@ public class MovieListController
         return new ResponseEntity<>(movieList, HttpStatus.OK);
     }
 
+
+
     //------------------------------------------------------------------------------------------------------------------
-    @GetMapping(value = "/movielist/getMovieDetails", params = { "movieID" }, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/movielist/{movieID}", method = RequestMethod.GET, params = "action=getMovieDetails")
     //------------------------------------------------------------------------------------------------------------------
-    public ResponseEntity<Movie> getMovieDetails(@RequestParam("movieID") String movieID)
+    public ResponseEntity<Movie> getMovieDetails(@PathVariable("movieID") int movieID)
     {
-        return new ResponseEntity<>(tmdbAPI.getMovieByID(Integer.parseInt(movieID)), HttpStatus.OK);
+        return new ResponseEntity<>(tmdbAPI.getMovieByID(movieID), HttpStatus.OK);
     }
 
 
