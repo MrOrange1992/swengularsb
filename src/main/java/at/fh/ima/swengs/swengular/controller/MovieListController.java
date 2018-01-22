@@ -228,6 +228,16 @@ public class MovieListController
         return new ResponseEntity<>(tmdbAPI.getMovieByID(movieID), HttpStatus.OK);
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+    @RequestMapping(value = "/movielist/{id}", method = RequestMethod.POST, params = "action=getRecommendations")
+    //------------------------------------------------------------------------------------------------------------------
+    public ResponseEntity<MovieList> createRecommendedMovieList(@RequestBody Set<Long> genreIdsList, @PathVariable Long id)
+    {
+        MovieList movieList = tmdbAPI.getRecommendedMovies(genreIdsList, id);
+        movieListRepository.save(movieList);
+        return new ResponseEntity<>(movieList, HttpStatus.OK);
+    }
+
 
 
     //------------------------------------------------------------------------------------------------------------------
