@@ -36,10 +36,8 @@ public class MovieListController
     ResponseEntity<Set<MovieList>> getAllMovieLists()
     {
         Iterable<MovieList> movieLists = movieListRepository.findAll();
-
         if (movieLists == null || !movieLists.iterator().hasNext())
             return new ResponseEntity<Set<MovieList>>(HttpStatus.NO_CONTENT);
-
         return new ResponseEntity<Set<MovieList>>(movieListRepository.findBy(), HttpStatus.OK);
     }
 
@@ -52,7 +50,6 @@ public class MovieListController
     {
         Set<MovieList> movieLists = movieListRepository.findAllByOwnerID(id);
         if (movieLists == null)  new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
         return new ResponseEntity<Set<MovieList>>(movieLists, HttpStatus.OK);
     }
 
@@ -64,6 +61,7 @@ public class MovieListController
     ResponseEntity<String> getOwnerName(@PathVariable long id)
     {
         User owner = userRepository.findById(id);
+        if (owner.getUsername() == null)  new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<String>(owner.getUsername(), HttpStatus.OK);
     }
 
@@ -75,9 +73,7 @@ public class MovieListController
     ResponseEntity<MovieList> getMovieListByID(@PathVariable long id)
     {
         MovieList movieList = movieListRepository.findById(id);
-
         if (movieList == null) new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
         return new ResponseEntity<>(movieList.loadTmdbContent(), HttpStatus.OK);
     }
 
@@ -89,9 +85,8 @@ public class MovieListController
     ResponseEntity<Set<Long>> getMovieListIDsOfOwner(@PathVariable long id)
     {
         User owner = userRepository.findById(id);
-
+        if (owner.getMovieLists() == null) new ResponseEntity<>(HttpStatus.NOT_FOUND);
         Set<Long> movieListIDs = owner.getMovieLists().stream().map(movieList -> movieList.getId()).collect(Collectors.toSet());
-
         return new ResponseEntity<>(movieListIDs, HttpStatus.OK);
     }
 
@@ -102,9 +97,12 @@ public class MovieListController
     //------------------------------------------------------------------------------------------------------------------
     public ResponseEntity<String> createMovieList(@RequestBody MovieList movieList)
     {
-        movieListRepository.save(movieList);
-
-        return new ResponseEntity<String>("Created Movielist: " + movieList.getName(), HttpStatus.CREATED);
+        try {
+            movieListRepository.save(movieList);
+            return new ResponseEntity<String>("Created Movielist: " + movieList.getName(), HttpStatus.CREATED);
+        } catch (Exception e){
+            return new ResponseEntity<String>("Error creating Movielist", HttpStatus.I_AM_A_TEAPOT);
+        }
     }
 
 
@@ -115,11 +113,8 @@ public class MovieListController
     public ResponseEntity<MovieList> updateMovieList(@PathVariable long id, @RequestBody MovieList movieListUpdate)
     {
         MovieList movieList = movieListRepository.findById(id);
-
         if (movieList == null) { return new ResponseEntity<MovieList>(HttpStatus.NOT_FOUND); }
-
         movieListRepository.save(movieListUpdate);
-
         return new ResponseEntity<MovieList>(HttpStatus.OK);
     }
 
@@ -130,12 +125,9 @@ public class MovieListController
     public ResponseEntity<String> addMovieToList(@PathVariable long id, @RequestBody int movieID)
     {
         MovieList movieList = movieListRepository.findById(id);
-
         if (movieList == null) { return new ResponseEntity<String>(HttpStatus.NOT_FOUND); }
-
         movieList.addMovieID(movieID);
         movieListRepository.save(movieList);
-
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -146,12 +138,9 @@ public class MovieListController
     public ResponseEntity<String> deleteMovieFromList(@PathVariable long id, @RequestBody int movieID)
     {
         MovieList movieList = movieListRepository.findById(id);
-
         if (movieList == null) { return new ResponseEntity<String>(HttpStatus.NOT_FOUND); }
-
         movieList.removeMovieID(movieID);
         movieListRepository.save(movieList);
-
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -162,11 +151,8 @@ public class MovieListController
     public ResponseEntity<MovieList> deleteMovieList(@PathVariable long id)
     {
         MovieList movieList = movieListRepository.findById(id);
-
         if (movieList == null) { return new ResponseEntity<MovieList>(HttpStatus.NOT_FOUND); }
-
         movieListRepository.delete(movieList);
-
         return new ResponseEntity<MovieList>(HttpStatus.OK);
     }
 
@@ -177,13 +163,14 @@ public class MovieListController
     //------------------------------------------------------------------------------------------------------------------
     public ResponseEntity<MovieList> getPopularMovies()
     {
-        MovieList popularMovieList = new MovieList();
-
-        popularMovieList.setName("Popular Movies");
-
-        popularMovieList.setMovies(tmdbAPI.getPopularMovies(1));
-
-        return new ResponseEntity<>(popularMovieList, HttpStatus.OK);
+        try{
+            MovieList popularMovieList = new MovieList();
+            popularMovieList.setName("Popular Movies");
+            popularMovieList.setMovies(tmdbAPI.getPopularMovies(1));
+            return new ResponseEntity<>(popularMovieList, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new MovieList(), HttpStatus.NO_CONTENT);
+        }
     }
 
 
@@ -193,10 +180,13 @@ public class MovieListController
     //------------------------------------------------------------------------------------------------------------------
     public ResponseEntity<MovieList> searchMoviesByName(@PathVariable("movieName") String movieName)
     {
-        MovieList movieList = new MovieList();
-        movieList.setMovies(tmdbAPI.searchMoviesByName(movieName, 1));
-
-        return new ResponseEntity<>(movieList, HttpStatus.OK);
+        try{
+            MovieList movieList = new MovieList();
+            movieList.setMovies(tmdbAPI.searchMoviesByName(movieName, 1));
+            return new ResponseEntity<>(movieList, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new MovieList(), HttpStatus.NO_CONTENT);
+        }
     }
 
 
@@ -206,7 +196,9 @@ public class MovieListController
     //------------------------------------------------------------------------------------------------------------------
     public ResponseEntity<Movie> getMovieDetails(@PathVariable("movieID") int movieID)
     {
-        return new ResponseEntity<>(tmdbAPI.getMovieByID(movieID), HttpStatus.OK);
+        Movie movie = tmdbAPI.getMovieByID(movieID);
+        if (movie == null) { return new ResponseEntity<>(new Movie(), HttpStatus.NOT_FOUND); }
+        return new ResponseEntity<>(movie, HttpStatus.OK);
     }
 
 
@@ -217,17 +209,9 @@ public class MovieListController
     public ResponseEntity<MovieList> createRecommendedMovieList(@RequestBody Set<Long> genreIdsList)
     {
         MovieList movieList = tmdbAPI.getRecommendedMovies(genreIdsList);
-        //movieListRepository.save(movieList);
+        if (movieList == null) { return new ResponseEntity<>(new MovieList(), HttpStatus.NOT_MODIFIED); }
         return new ResponseEntity<>(movieList, HttpStatus.OK);
     }
-
-
-
-    //------------------------------------------------------------------------------------------------------------------
-    @ResponseStatus(value= HttpStatus.NOT_FOUND,reason="This movielist is not found in the system")
-    //------------------------------------------------------------------------------------------------------------------
-
-
 
     //------------------------------------------------------------------------------------------------------------------
     @ExceptionHandler(MovieListNotFoundException.class)
