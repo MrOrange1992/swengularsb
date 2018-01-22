@@ -99,7 +99,7 @@ public class MovieListController
     {
         try {
             movieListRepository.save(movieList);
-            return new ResponseEntity<String>("Created Movielist: " + movieList.getName(), HttpStatus.CREATED);
+            return new ResponseEntity<String>("Created Movielist: " + movieList.getName(), HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntity<String>("Error creating Movielist", HttpStatus.I_AM_A_TEAPOT);
         }
