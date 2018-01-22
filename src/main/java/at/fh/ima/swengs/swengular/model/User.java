@@ -50,11 +50,11 @@ public class User
         this.favouriteActorIDs = new HashSet<Integer>();
     }*/
 
-    public User(String username, String password, String genreIDs)
+    public User(String username, String password, Set<Integer> genreIDs)
     {
         this.username = username;
         this.password = password;
-        this.genreIDs = new HashSet<Integer>();
+        this.genreIDs = genreIDs;
         this.movieLists = new HashSet<MovieList>();
         this.usersFollowing = new HashSet<User>();
         this.favouriteActorIDs = new HashSet<Integer>();
