@@ -83,6 +83,9 @@ public class MovieListController
     ResponseEntity<String> getOwnerName(@PathVariable long id)
     {
         User owner = userRepository.findById(id);
+
+        if (owner == null) new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
         return new ResponseEntity<String>(owner.getUsername(), HttpStatus.OK);
     }
 
@@ -233,6 +236,8 @@ public class MovieListController
         if (movieList == null) { return new ResponseEntity<>(new MovieList(), HttpStatus.NOT_MODIFIED); }
         return new ResponseEntity<>(movieList, HttpStatus.OK);
     }
+
+
 
     //------------------------------------------------------------------------------------------------------------------
     @ExceptionHandler(MovieListNotFoundException.class)
