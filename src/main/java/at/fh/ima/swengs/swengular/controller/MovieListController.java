@@ -7,31 +7,12 @@ import at.fh.ima.swengs.swengular.model.User;
 import at.fh.ima.swengs.swengular.repository.MovieListRepository;
 import at.fh.ima.swengs.swengular.repository.UserRepository;
 import at.fh.ima.swengs.swengular.service.TmdbAPI;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import info.movito.themoviedbapi.model.MovieDb;
-import jdk.nashorn.internal.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
-import javax.persistence.Entity;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.servlet.http.HttpServletResponse;
-import javax.swing.text.html.HTML;
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
@@ -229,12 +210,12 @@ public class MovieListController
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    @RequestMapping(value = "/movielist/{id}", method = RequestMethod.POST, params = "action=getRecommendations")
+    @RequestMapping(value = "/movielist/", method = RequestMethod.POST, params = "action=getRecommendations")
     //------------------------------------------------------------------------------------------------------------------
-    public ResponseEntity<MovieList> createRecommendedMovieList(@RequestBody Set<Long> genreIdsList, @PathVariable Long id)
+    public ResponseEntity<MovieList> createRecommendedMovieList(@RequestBody Set<Long> genreIdsList)
     {
-        MovieList movieList = tmdbAPI.getRecommendedMovies(genreIdsList, id);
-        movieListRepository.save(movieList);
+        MovieList movieList = tmdbAPI.getRecommendedMovies(genreIdsList);
+        //movieListRepository.save(movieList);
         return new ResponseEntity<>(movieList, HttpStatus.OK);
     }
 

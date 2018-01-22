@@ -185,7 +185,7 @@ public class TmdbAPI
     }
     //------------------------------------------------------------------------------------------------------------------
 
-    public MovieList getRecommendedMovies(Set<Long> ids, Long userID)
+    public MovieList getRecommendedMovies(Set<Long> ids)
     {
         Discover discover = new Discover();
         discover.page(1);
@@ -197,7 +197,7 @@ public class TmdbAPI
         discover.withGenres(idString);
         MovieResultsPage movieResultsPage = tmdbDiscover.getDiscover(discover);
 
-        MovieList returnList = new MovieList("Recommnedation", userID);
+        MovieList returnList = new MovieList("Your Recommendations", (long)9999);
 
         returnList.setMovies(movieResultsPage.getResults()
                 .stream()
