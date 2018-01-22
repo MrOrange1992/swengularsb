@@ -22,7 +22,7 @@ public class Movie
 
     private String overview;
 
-    private float userRating;
+    private float voteAverage;
 
     private List<Actor> actors;
 
@@ -43,7 +43,7 @@ public class Movie
                 .collect(Collectors.toList());*/
         this.homepage = movieDb.getHomepage();
         this.overview = movieDb.getOverview();
-        this.userRating = movieDb.getUserRating();
+        this.voteAverage = movieDb.getVoteAverage();
 
         //Mapping for Actors
         if (movieDb.getCast() != null)
@@ -139,12 +139,12 @@ public class Movie
     }
 
 
-    public float getUserRating() {
-        return userRating;
+    public float getVoteAverage() {
+        return voteAverage;
     }
 
-    public void setUserRating(float userRating) {
-        this.userRating = userRating;
+    public void setVoteAverage(float voteAverage) {
+        this.voteAverage = voteAverage;
     }
 
 
@@ -167,7 +167,7 @@ public class Movie
         Movie movie = (Movie) o;
 
         if (id != movie.id) return false;
-        if (Float.compare(movie.userRating, userRating) != 0) return false;
+        if (Float.compare(movie.voteAverage, voteAverage) != 0) return false;
         if (title != null ? !title.equals(movie.title) : movie.title != null) return false;
         if (posterPath != null ? !posterPath.equals(movie.posterPath) : movie.posterPath != null) return false;
         if (genres != null ? !genres.equals(movie.genres) : movie.genres != null) return false;
@@ -185,7 +185,7 @@ public class Movie
         result = 31 * result + (genres != null ? genres.hashCode() : 0);
         result = 31 * result + (homepage != null ? homepage.hashCode() : 0);
         result = 31 * result + (overview != null ? overview.hashCode() : 0);
-        result = 31 * result + (userRating != +0.0f ? Float.floatToIntBits(userRating) : 0);
+        result = 31 * result + (voteAverage != +0.0f ? Float.floatToIntBits(voteAverage) : 0);
         return result;
     }
 
@@ -199,7 +199,7 @@ public class Movie
                 ", genres=" + genres +
                 ", homepage='" + homepage + '\'' +
                 ", overview='" + overview + '\'' +
-                ", userRating=" + userRating +
+                ", voteAverage=" + voteAverage +
                 '}';
     }
 }
