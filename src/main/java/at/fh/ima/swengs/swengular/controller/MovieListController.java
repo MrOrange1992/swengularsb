@@ -34,6 +34,7 @@ import java.util.Set;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+
 @CrossOrigin(origins = "*")
 @RestController
 public class MovieListController
@@ -119,11 +120,12 @@ public class MovieListController
     //------------------------------------------------------------------------------------------------------------------
     @RequestMapping(value = "/movielist/", method = RequestMethod.POST, params = "action=createMovieList")
     //------------------------------------------------------------------------------------------------------------------
-    public ResponseEntity<String> createMovieList(@RequestBody MovieList movieList)
+    public ResponseEntity<MovieList> createMovieList(@RequestBody MovieList movieList)
     {
         movieListRepository.save(movieList);
+        MovieList list = movieListRepository.findByName(movieList.getName());
 
-        return new ResponseEntity<String>("Created Movielist: " + movieList.getName(), HttpStatus.CREATED);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
 
