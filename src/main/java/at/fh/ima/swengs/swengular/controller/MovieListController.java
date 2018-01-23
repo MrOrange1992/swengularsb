@@ -47,9 +47,7 @@ public class MovieListController
     @Autowired
     TmdbAPI tmdbAPI;
 
-
-
-       //------------------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------
     @RequestMapping(value="/movielist", method = RequestMethod.GET, params = "action=getAllMovieLists")
     //------------------------------------------------------------------------------------------------------------------
     ResponseEntity<Set<MovieList>> getAllMovieLists()
@@ -62,8 +60,6 @@ public class MovieListController
         return new ResponseEntity<Set<MovieList>>(movieListRepository.findBy(), HttpStatus.OK);
     }
 
-
-
     //------------------------------------------------------------------------------------------------------------------
     @RequestMapping(value="/movielist/{id}", method = RequestMethod.GET, params = "action=getMovieListsOfUser")
     //------------------------------------------------------------------------------------------------------------------
@@ -74,8 +70,6 @@ public class MovieListController
 
         return new ResponseEntity<Set<MovieList>>(movieLists, HttpStatus.OK);
     }
-
-
 
     //------------------------------------------------------------------------------------------------------------------
     @RequestMapping(value = "/movielist/{id}", method = RequestMethod.GET, params = "action=getOwnerName")
@@ -89,8 +83,6 @@ public class MovieListController
         return new ResponseEntity<String>(owner.getUsername(), HttpStatus.OK);
     }
 
-
-
     //------------------------------------------------------------------------------------------------------------------
     @RequestMapping(value = "/movielist/{id}", method = RequestMethod.GET, params = "action=getMovieListByID")
     //------------------------------------------------------------------------------------------------------------------
@@ -103,8 +95,6 @@ public class MovieListController
         return new ResponseEntity<>(movieList.loadTmdbContent(), HttpStatus.OK);
     }
 
-
-
     //------------------------------------------------------------------------------------------------------------------
     @RequestMapping(value = "/movielist/{id}", method = RequestMethod.GET, params = "action=getMovieListIDsOfOwner")
     //------------------------------------------------------------------------------------------------------------------
@@ -115,8 +105,6 @@ public class MovieListController
         Set<Long> movieListIDs = owner.getMovieLists().stream().map(movieList -> movieList.getId()).collect(Collectors.toSet());
         return new ResponseEntity<>(movieListIDs, HttpStatus.OK);
     }
-
-
 
     //------------------------------------------------------------------------------------------------------------------
     @RequestMapping(value = "/movielist/", method = RequestMethod.POST, params = "action=createMovieList")
@@ -129,8 +117,6 @@ public class MovieListController
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-
-
     //------------------------------------------------------------------------------------------------------------------
     @RequestMapping(value = "/movielist/{id}", method = RequestMethod.PUT, params = "action=updateMovieList")
     //------------------------------------------------------------------------------------------------------------------
@@ -141,8 +127,6 @@ public class MovieListController
         movieListRepository.save(movieListUpdate);
         return new ResponseEntity<MovieList>(HttpStatus.OK);
     }
-
-
 
     @RequestMapping(value = "/movielist/{id}", method = RequestMethod.PUT, params = "action=addMovieToList")
     //------------------------------------------------------------------------------------------------------------------
@@ -155,8 +139,6 @@ public class MovieListController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
-
     @RequestMapping(value = "/movielist/{id}", method = RequestMethod.PUT, params = "action=deleteMovieFromList")
     //------------------------------------------------------------------------------------------------------------------
     public ResponseEntity<String> deleteMovieFromList(@PathVariable long id, @RequestBody int movieID)
@@ -168,8 +150,6 @@ public class MovieListController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
-
     @RequestMapping(value = "/movielist/{id}", method = RequestMethod.DELETE, params = "action=deleteMovieList")
     //------------------------------------------------------------------------------------------------------------------
     public ResponseEntity<MovieList> deleteMovieList(@PathVariable long id)
@@ -179,8 +159,6 @@ public class MovieListController
         movieListRepository.delete(movieList);
         return new ResponseEntity<MovieList>(HttpStatus.OK);
     }
-
-
 
     //------------------------------------------------------------------------------------------------------------------
     @RequestMapping(value = "/movielist/", method = RequestMethod.GET, params = "action=getPopularMovies")
@@ -197,8 +175,6 @@ public class MovieListController
         }
     }
 
-
-
     //------------------------------------------------------------------------------------------------------------------
     @RequestMapping(value = "/movielist/{movieName}", method = RequestMethod.GET, params = "action=searchByName")
     //------------------------------------------------------------------------------------------------------------------
@@ -212,9 +188,6 @@ public class MovieListController
             return new ResponseEntity<>(new MovieList(), HttpStatus.NO_CONTENT);
         }
     }
-
-
-
     //------------------------------------------------------------------------------------------------------------------
     @RequestMapping(value = "/movielist/{movieID}", method = RequestMethod.GET, params = "action=getMovieDetails")
     //------------------------------------------------------------------------------------------------------------------
